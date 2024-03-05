@@ -1,0 +1,58 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+const posts = (await getCollection('blog')).sort(
+    (a, b) => -(a.data.pubDate.valueOf() - b.data.pubDate.valueOf()),
+);
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    </head>
+    <body class="h-screen select-none bg-black">
+        <div class="bg-black-100 flex min-h-screen items-center justify-center">
+            <!-- Card or contents that should be centered vertically -->
+            <div class="max-w-fit py-12">
+                <a href="/"
+                    ><i class="ri-arrow-left-line text-link text-2xl"></i>
+                </a>
+                <span class="font-serifBold text-3xl text-white">
+                    Notebook</span
+                >
+                <h4
+                    class="text-subText px-7 text-justify font-serif text-lg leading-snug"
+                >
+                    A place to share thoughts and ideas.
+                </h4>
+                <section class="group relative mt-2 px-7">
+                    <ul>
+                        {
+                            posts.map((post) => (
+                                <li class="mb-3">
+                                    <a href={`/blog/${post.slug}/`}>
+                                        <h4 class="title font-serifBold text-xl text-white">
+                                            {post.data.title}
+                                        </h4>
+                                        <p class="date text-subText font-mono text-sm capitalize">
+                                            <i class="ri-calendar-line" />
+                                            <FormattedDate
+                                                date={post.data.pubDate}
+                                            />
+                                        </p>
+                                    </a>
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </body>
+</html>

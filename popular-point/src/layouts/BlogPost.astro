@@ -1,0 +1,150 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import BaseHead from '../components/BaseHead.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+
+type Props = CollectionEntry<'blog'>['data'];
+
+const { title, description, pubDate, updatedDate, author } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+        <style is:global>
+            p {
+                color: white;
+                font-family: goudy_old_style_pro-regular, serif;
+                font-size: 1.05rem;
+                line-height: 1.25rem;
+                text-align: justify;
+                text-justify: newspaper;
+                /*word-break: break-all;*/
+                hyphens: auto;
+            }
+
+            p,
+            img {
+                padding-top: 2%;
+                padding-left: 2rem;
+                padding-right: 2rem;
+            }
+
+            em {
+                font-family: goudy_old_style_pro-italic, serif;
+            }
+
+            .note,
+            pre {
+                margin-left: 2rem;
+                margin-right: 2rem;
+            }
+
+            .note {
+                margin-top: 1rem;
+            }
+
+            .note > div > div > p {
+                padding-left: 1rem;
+                padding-top: 0.1rem;
+            }
+
+            code > span {
+                padding-left: 1rem;
+            }
+
+            pre > code {
+                display: grid; /*  this is way the line will span whole width of `code` component */
+                padding: 1.5rem 0;
+                background-color: rgb(17 24 39 / var(--tw-bg-opacity));
+                /*border-radius: 0.5rem;*/
+                overflow: auto;
+                font-size: 0.9rem;
+            }
+
+            p > code {
+                font-size: 0.9rem;
+                color: #f2a2d6;
+            }
+
+            code > span[data-line] {
+                border-left: 0.4rem solid transparent;
+                padding: 0 0.4rem;
+            }
+
+            code > span[data-highlighted-line] {
+                background-color: #31293d;
+                border-color: #ab95a5;
+            }
+
+            figure [data-rehype-pretty-code-title] {
+                margin-left: 2rem;
+                margin-top: 1rem;
+                margin-right: 2rem;
+                padding: 0 0.25rem;
+                border-left: 0.4rem solid transparent;
+                border-top-left-radius: 0rem;
+                border-top-right-radius: 0rem;
+                background-color: #21222e;
+                color: #ffbfe8;
+                display: grid;
+                font-family: dm, monospace;
+                font-size: 1.15rem;
+            }
+
+            h1 {
+                margin-left: 2rem;
+            }
+
+            div.stats {
+                margin-left: -0.3rem;
+            }
+
+            .back {
+                margin-left: 1.8rem;
+            }
+        </style>
+
+        <!--
+        :root {
+            --astro-code-color-text: #be4678;
+            --astro-code-color-background: #111827;
+            --astro-code-token-constant: #aa573c;
+            --astro-code-token-string: orchid;
+            --astro-code-token-comment: #655f6d;
+            --astro-code-token-keyword: #955ae7;
+            --astro-code-token-parameter: #be4678;
+            --astro-code-token-function: #576ddb;
+            --astro-code-token-string-expression: #2a9292;
+            --astro-code-token-punctuation: azure;
+            --astro-code-token-link: honeydew;
+            -->
+    </head>
+    <body class="h-screen select-none bg-black">
+        <div
+            class="bg-black-100 flex min-h-screen flex-col items-center justify-center"
+        >
+            <!-- Card or contents that should be centered vertically -->
+            <div class="max-w-full py-12 sm:max-w-prose">
+                <div>
+                    <a href="/blog"
+                        ><i class="ri-arrow-left-line text-link ri-xl back"></i>
+                    </a>
+                    <h1 class="font-serifBold mt-1 text-white">
+                        <span class="text-3xl">{title}</span>
+                    </h1>
+                </div>
+                <div class="text-gray text-md stats px-9 font-mono capitalize">
+                    <i class="ri-calendar-line"></i>
+                    <FormattedDate date={pubDate} />
+                    ·
+                    <i class="ri-user-line"></i>
+                    {author}
+                </div>
+                <slot />
+            </div>
+        </div>
+    </body>
+</html>
