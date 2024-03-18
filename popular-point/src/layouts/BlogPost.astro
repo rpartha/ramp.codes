@@ -14,10 +14,17 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
     <head>
         <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
         <style is:global>
+            h2 {
+                color: #ffbfe8;
+                font-family: dm, monospace;
+                font-size: 1.125rem;
+                style: bold;
+                text-transform: uppercase;
+            }
             p {
                 color: white;
                 font-family: goudy_old_style_pro-regular, serif;
-                font-size: 1.05rem;
+                font-size: 1.125rem;
                 line-height: 1.25rem;
                 text-align: justify;
                 text-justify: newspaper;
@@ -25,6 +32,7 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
                 hyphens: auto;
             }
 
+            h2,
             p,
             img {
                 padding-top: 2%;
@@ -69,16 +77,6 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
                 color: #f2a2d6;
             }
 
-            code > span[data-line] {
-                border-left: 0.4rem solid transparent;
-                padding: 0 0.4rem;
-            }
-
-            code > span[data-highlighted-line] {
-                background-color: #31293d;
-                border-color: #ab95a5;
-            }
-
             figure [data-rehype-pretty-code-title] {
                 margin-left: 2rem;
                 margin-top: 1rem;
@@ -105,6 +103,33 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
             .back {
                 margin-left: 1.8rem;
             }
+
+            code > span[data-line] {
+                border-left: 0.4rem solid transparent;
+                padding: 0 0.4rem;
+            }
+
+            code > span[data-highlighted-line-id='add'] {
+                background-color: #31293d;
+                border-color: #ab95a5;
+            }
+
+            code > span[data-highlighted-line-id='remove'] {
+                background-color: #480f1d;
+                border-color: #6c3e4a;
+            }
+
+            code > span[data-highlighted-line-id='add']::before {
+                font-size: 0.9rem;
+                color: #70985e;
+                content: '+';
+            }
+
+            code > span[data-highlighted-line-id='remove']::before {
+                font-size: 0.9rem;
+                color: #901f3b;
+                content: '-';
+            }
         </style>
 
         <!--
@@ -122,26 +147,47 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
             --astro-code-token-link: honeydew;
             -->
     </head>
-    <body class="h-screen select-none bg-black">
+    <body class="h-full select-none bg-black">
         <div
             class="bg-black-100 flex min-h-screen flex-col items-center justify-center"
         >
             <!-- Card or contents that should be centered vertically -->
             <div class="max-w-full py-12 sm:max-w-prose">
-                <div>
-                    <a href="/blog"
-                        ><i class="ri-arrow-left-line text-link ri-xl back"></i>
-                    </a>
-                    <h1 class="font-serifBold mt-1 text-white">
-                        <span class="text-3xl">{title}</span>
-                    </h1>
-                </div>
-                <div class="text-gray text-md stats px-9 font-mono capitalize">
-                    <i class="ri-calendar-line"></i>
-                    <FormattedDate date={pubDate} />
-                    ·
-                    <i class="ri-user-line"></i>
-                    {author}
+                <div class="">
+                    <div class="items-start">
+                        <a href="/blog"
+                            ><i class="ri-arrow-left-line text-link ri-xl back"
+                            ></i>
+                        </a>
+                        <h1 class="font-serifBold mt-1 text-white">
+                            <span class="text-3xl">{title}</span>
+                        </h1>
+                    </div>
+                    <div
+                        class="text-gray text-md stats px-9 font-mono capitalize"
+                    >
+                        <span
+                            ><i class="ri-calendar-line"></i>
+                            <FormattedDate date={pubDate} />
+                        </span>
+                        ·
+                        <span>
+                            <i class="ri-user-line"></i>
+                            {author}
+                        </span>
+                    </div>
+
+                    {
+                        updatedDate && (
+                            <div class="text-gray text-md stats updated  px-9 font-mono capitalize">
+                                <i class="ri-history-line" />
+                                <span>
+                                    Modified:
+                                    <FormattedDate date={updatedDate} />
+                                </span>
+                            </div>
+                        )
+                    }
                 </div>
                 <slot />
             </div>
