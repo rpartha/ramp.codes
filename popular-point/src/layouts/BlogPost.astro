@@ -3,6 +3,8 @@ import type { CollectionEntry } from 'astro:content';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import BaseHead from '../components/BaseHead.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/blogpost.css';
 
 type Props = CollectionEntry<'blog'>['data'];
 
@@ -13,139 +15,57 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
 <html lang="en">
     <head>
         <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-        <style is:global>
-            h2 {
-                color: #ffbfe8;
-                font-family: dm, monospace;
-                font-size: 1.125rem;
-                style: bold;
-                text-transform: uppercase;
-            }
-            p {
-                color: white;
-                font-family: goudy_old_style_pro-regular, serif;
-                font-size: 1.125rem;
-                line-height: 1.25rem;
-                text-align: justify;
-                text-justify: newspaper;
-                /*word-break: break-all;*/
-                hyphens: auto;
+
+        <script>
+            let copyButtonIcon =
+                '<i class="ri-file-copy-line ri-xl text-action flex max-sm:hidden"></i>';
+            let codeBlocks = Array.from(document.querySelectorAll('pre'));
+            let figCaptions = Array.from(
+                document.querySelectorAll('figcaption'),
+            );
+
+            for (let [index, codeBlock] of codeBlocks.entries()) {
+                let figCaption = figCaptions.at(index);
+
+                let wrapper = document.createElement('div');
+                wrapper.style.position = 'relative';
+
+                let copyButton = document.createElement('button');
+                copyButton.className = 'copy-code';
+                copyButton.innerHTML = copyButtonIcon;
+
+                figCaption.setAttribute('tabindex', '0');
+                figCaption.appendChild(copyButton);
+
+                // wrap codebock with relative parent element
+                codeBlock.parentNode.insertBefore(wrapper, figCaption);
+                wrapper.appendChild(figCaption);
+
+                copyButton.addEventListener('click', async () => {
+                    await copyCode(codeBlock, copyButton);
+                });
             }
 
-            h2,
-            p,
-            img {
-                padding-top: 2%;
-                padding-left: 2rem;
-                padding-right: 2rem;
-            }
+            async function copyCode(block, button) {
+                let code = block.querySelector('code');
+                let text = code.innerText;
 
-            em {
-                font-family: goudy_old_style_pro-italic, serif;
-            }
+                await navigator.clipboard.writeText(text);
 
-            .note,
-            pre {
-                margin-left: 2rem;
-                margin-right: 2rem;
-            }
+                button.innerText = 'Code Copied!';
 
-            .note {
-                margin-top: 1rem;
-            }
+                if (button.innerText === 'Code Copied!') {
+                    button.style.paddingTop = '0.3rem';
+                }
 
-            .note > div > div > p {
-                padding-left: 1rem;
-                padding-top: 0.1rem;
+                setTimeout(() => {
+                    button.innerHTML = copyButtonIcon;
+                    if (button.innerHTML === copyButtonIcon) {
+                        button.style.paddingTop = '0.5rem';
+                    }
+                }, 700);
             }
-
-            code > span {
-                padding-left: 1rem;
-            }
-
-            pre > code {
-                display: grid; /*  this is way the line will span whole width of `code` component */
-                padding: 1.5rem 0;
-                background-color: rgb(17 24 39 / var(--tw-bg-opacity));
-                /*border-radius: 0.5rem;*/
-                overflow: auto;
-                font-size: 0.9rem;
-            }
-
-            p > code {
-                font-size: 0.9rem;
-                color: #f2a2d6;
-            }
-
-            figure [data-rehype-pretty-code-title] {
-                margin-left: 2rem;
-                margin-top: 1rem;
-                margin-right: 2rem;
-                padding: 0 0.25rem;
-                border-left: 0.4rem solid transparent;
-                border-top-left-radius: 0rem;
-                border-top-right-radius: 0rem;
-                background-color: #21222e;
-                color: #ffbfe8;
-                display: grid;
-                font-family: dm, monospace;
-                font-size: 1.15rem;
-            }
-
-            h1 {
-                margin-left: 2rem;
-            }
-
-            div.stats {
-                margin-left: -0.3rem;
-            }
-
-            .back {
-                margin-left: 1.8rem;
-            }
-
-            code > span[data-line] {
-                border-left: 0.4rem solid transparent;
-                padding: 0 0.4rem;
-            }
-
-            code > span[data-highlighted-line-id='add'] {
-                background-color: #31293d;
-                border-color: #ab95a5;
-            }
-
-            code > span[data-highlighted-line-id='remove'] {
-                background-color: #480f1d;
-                border-color: #6c3e4a;
-            }
-
-            code > span[data-highlighted-line-id='add']::before {
-                font-size: 0.9rem;
-                color: #70985e;
-                content: '+';
-            }
-
-            code > span[data-highlighted-line-id='remove']::before {
-                font-size: 0.9rem;
-                color: #901f3b;
-                content: '-';
-            }
-        </style>
-
-        <!--
-        :root {
-            --astro-code-color-text: #be4678;
-            --astro-code-color-background: #111827;
-            --astro-code-token-constant: #aa573c;
-            --astro-code-token-string: orchid;
-            --astro-code-token-comment: #655f6d;
-            --astro-code-token-keyword: #955ae7;
-            --astro-code-token-parameter: #be4678;
-            --astro-code-token-function: #576ddb;
-            --astro-code-token-string-expression: #2a9292;
-            --astro-code-token-punctuation: azure;
-            --astro-code-token-link: honeydew;
-            -->
+        </script>
     </head>
     <body class="h-full select-none bg-black">
         <div
@@ -156,16 +76,15 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
                 <div class="">
                     <div class="items-start">
                         <a href="/blog"
-                            ><i class="ri-arrow-left-line text-link ri-xl back"
+                            ><i
+                                class="ri-arrow-left-line text-action ri-xl back"
                             ></i>
                         </a>
                         <h1 class="font-serifBold mt-1 text-white">
                             <span class="text-3xl">{title}</span>
                         </h1>
                     </div>
-                    <div
-                        class="text-gray text-md stats px-9 font-mono capitalize"
-                    >
+                    <div class="text-gray text-md stats px-9 font-mono">
                         <span
                             ><i class="ri-calendar-line"></i>
                             <FormattedDate date={pubDate} />
@@ -190,6 +109,7 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
                     }
                 </div>
                 <slot />
+                <Footer customCss=" ml-8 mr-9" />
             </div>
         </div>
     </body>

@@ -19,7 +19,7 @@ export default {
       boxBG: '#111827',
       pillBG: '#21222e',
       pillText: '#96ddff',
-      link: '#FFA1A1',
+      action: '#EACCE3',
     },
     fontFamily: {
       sans: ['Satoshi-Variable', 'sans-serif'],

@@ -1,10 +1,10 @@
 ---
 import BaseHead from '../../components/BaseHead.astro';
-import Header from '../../components/Header.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 import ReadingTime from '../../components/ReadingTime.astro';
+import Footer from '../../components/Footer.astro';
 
 const posts = (
     await getCollection('blog', ({ data }) => {
@@ -21,9 +21,9 @@ const posts = (
     <body class="h-full select-none bg-black">
         <div class="bg-black-100 flex min-h-screen items-center justify-center">
             <!-- Card or contents that should be centered vertically -->
-            <div class="max-w-fit py-12">
+            <div class="max-w-fit px-5 py-12">
                 <a href="/"
-                    ><i class="ri-arrow-left-line text-link text-2xl"></i>
+                    ><i class="ri-arrow-left-line text-action text-2xl"></i>
                 </a>
                 <span class="font-serifBold text-3xl text-white">
                     Notebook</span
@@ -58,6 +58,7 @@ const posts = (
                         }
                     </ul>
                 </section>
+                <Footer />
             </div>
         </div>
     </body>

@@ -4,6 +4,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 import ReadingTime from '../components/ReadingTime.astro';
+import Footer from '../components/Footer.astro';
 
 const posts = (
     await getCollection('blog', ({ data }) => {
@@ -18,9 +19,9 @@ const posts = (
         <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
     </head>
     <body class="h-full select-none bg-black">
-        <div class="bg-black-100 flex min-h-screen items-center justify-center">
+        <div class="bg-black-100 flex min-h-screen flex-col items-center justify-center">
             <!-- Card or contents that should be centered vertically -->
-            <div class="max-w-prose px-10 py-12">
+            <div class="max-w-full sm:max-w-prose px-5 py-12">
                 <img
                     src="../logo/selfie-2.png"
                     class="h-16 w-16 object-contain"
@@ -40,13 +41,13 @@ const posts = (
                     class="mt-2 text-justify font-serif text-lg leading-snug text-white"
                 >
                     My full name has twenty-six characters, but you can save
-                    your breath and call me Ram. I consider myself to be an
-                    experienced Software Engineer with about a half a decade’s
-                    worth of demonstrated experience in analysis, design,
-                    development, testing, and implementation of complex software
-                    applications across various domains. Seeking to leverage my
-                    expertise to improve the software development process
-                    wherever I work.
+                    your breath and call me Ram (as in CD-ROM). Okay, I made you count - actually it's
+                    twenty-three. I consider myself to be a highly skilled and motivated
+                    Software Engineer with a passion for crafting efficient, scalable, and
+                    maintainable solutions. With about a half a decade’s worth of demonstrated
+                    experience in designing and implementing robust code, in conjuction with a
+                    continuous learning mindset, I'm able to contribute effectively to cutting-edge
+                    projects.
                 </p>
                 <h2 class="text-header mt-4 font-mono text-lg font-bold">
                     CAREER ARCHIVES
@@ -82,7 +83,7 @@ const posts = (
                         financial market space. Since I began, I got the
                         opportunity to write efficient, highly performant
                         features for heavily-used self-service platforms
-                        spanning a multitude of applicaitons and services used
+                        spanning a multitude of applications and services used
                         by DTCC engineers alongside a group of like-minded
                         indivudals. I worked on a lot of enhacements and
                         features, but here is what I'd like to mention:
@@ -180,7 +181,7 @@ const posts = (
                 <p
                     class="mt-2 text-justify font-serif text-lg leading-snug text-white"
                 >
-                    Let's share thoughts and ideas.
+                    I occasionally like to write about stuff.
                 </p>
                 <section class="group relative mt-2">
                     <ul>
@@ -211,14 +212,14 @@ const posts = (
                     </ul>
                     <a
                         href="/blog"
-                        class="text-link mt-2 inline-block font-mono"
+                        class="text-action mt-2 inline-block font-mono"
                     >
                         <span>Notebook</span>
                         <i class="ri-arrow-right-line"></i>
                     </a>
                 </section>
                 <h2 class="text-header mt-4 font-mono text-lg font-bold">
-                    PASSION
+                    PASSIONS
                 </h2>
                 <ul
                     class="mt-2 list-['﹡_'] px-5 text-justify font-serif text-lg leading-snug text-white"
@@ -232,7 +233,7 @@ const posts = (
                 <h2 class="text-header mt-4 font-mono text-lg font-bold">
                     FIND ME ON THE INTERWEB
                 </h2>
-                <div class="text-link mt-2 font-mono">
+                <div class="text-action mt-2 font-mono">
                     <a href="https://www.instagram.com/ramp.codes/">
                         <i class="ri-arrow-right-up-line"></i>
                         <span class="mr-1 lg:mr-4">Instagram</span>
@@ -246,14 +247,7 @@ const posts = (
                         <span>Email</span>
                     </a>
                 </div>
-                <div class="text-subText mt-4 flex flex-row">
-                    <i class="ri-user-voice-line ri-md"></i><span
-                        class="text-md pl-2 text-justify font-mono"
-                    >
-                        Got any feedback or suggestions? I'd love to hear more
-                        about it.</span
-                    >
-                </div>
+                <Footer />
             </div>
         </div>
     </body>

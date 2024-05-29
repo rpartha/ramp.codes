@@ -1,0 +1,16 @@
+---
+interface Props {
+    customCss: String;
+}
+
+const { customCss } = Astro.props;
+---
+
+<div class={`text-subText mt-4 flex flex-row${customCss}`}>
+    <i class="ri-user-voice-line ri-md"></i><span
+        class="text-md pl-2 text-justify font-mono"
+    >
+        Got any feedback or suggestions? I'd love to hear more about it.
+        <a href="#"><i class="ri-arrow-up-line md:ri-lg max-sm:ri-xs"></i></a></span
+    >
+</div>
