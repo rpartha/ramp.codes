@@ -34,12 +34,12 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
                 copyButton.className = 'copy-code';
                 copyButton.innerHTML = copyButtonIcon;
 
-                figCaption.setAttribute('tabindex', '0');
-                figCaption.appendChild(copyButton);
-
-                // wrap codebock with relative parent element
                 if (figCaption !== undefined) {
-                  codeBlock?.parentNode.insertBefore(wrapper, figCaption);
+                  figCaption.setAttribute('tabindex', '0');
+                  figCaption.appendChild(copyButton);
+
+                  // wrap codebock with relative parent element
+                  codeBlock?.parentNode?.insertBefore(wrapper, figCaption);
                   wrapper.appendChild(figCaption);
                 }
 
