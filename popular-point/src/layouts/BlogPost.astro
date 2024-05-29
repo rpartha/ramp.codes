@@ -38,15 +38,17 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
                 figCaption.appendChild(copyButton);
 
                 // wrap codebock with relative parent element
-                codeBlock.parentNode.insertBefore(wrapper, figCaption);
-                wrapper.appendChild(figCaption);
+                if (figCaption !== undefined) {
+                  codeBlock?.parentNode.insertBefore(wrapper, figCaption);
+                  wrapper.appendChild(figCaption);
+                }
 
                 copyButton.addEventListener('click', async () => {
                     await copyCode(codeBlock, copyButton);
                 });
             }
 
-            async function copyCode(block, button) {
+            async function copyCode(block:any, button:any) {
                 let code = block.querySelector('code');
                 let text = code.innerText;
 
