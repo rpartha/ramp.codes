@@ -15,7 +15,7 @@ export default {
       infoBorder: '#96a9ff',
       infoIcon: '#96ddff',
       ideaIcon: '#ffed96',
-      ideaBorder: '#ffe463',
+      ideaBorder: '#ffe048',
       boxBG: '#111827',
       pillBG: '#21222e',
       pillText: '#96ddff',

@@ -93,7 +93,16 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
                         </span>
                         ·
                         <span>
-                            <i class="ri-user-line"></i>
+                            {
+                                author && author.includes(',') && (
+                                    <i class="ri-group-line"></i>
+                                )
+                            }
+                            {
+                                author && !author.includes(',') && (
+                                    <i class="ri-user-line"></i>
+                                )
+                            }
                             {author}
                         </span>
                     </div>
