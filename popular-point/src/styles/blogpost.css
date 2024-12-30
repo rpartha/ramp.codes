@@ -19,6 +19,16 @@ h4 {
     text-transform: uppercase;
 }
 
+.tbl {
+    padding-top: 2%;
+}
+
+table {
+    font-family: dm, monospace;
+    style: bold;
+    text-transform: uppercase;
+}
+
 ol,
 ul {
     color: white;
@@ -52,15 +62,17 @@ img {
     padding-right: 2rem;
 }
 
-li > p {
+li>p {
     padding-top: 1%;
 }
+
 em {
     font-family: goudy_old_style_pro-italic, serif;
 }
 
 .note,
-pre {
+pre,
+table {
     margin-left: 2rem;
     margin-right: 2rem;
 }
@@ -69,16 +81,16 @@ pre {
     margin-top: 1rem;
 }
 
-.note > div > div > p {
+.note>div>div>p {
     padding-left: 1rem;
     padding-top: 0.1rem;
 }
 
-code > span {
+code>span {
     padding-left: 1rem;
 }
 
-pre > code {
+pre>code {
     display: grid;
     /*  this is way the line will span whole width of `code` component */
     padding: 1.5rem 0;
@@ -88,9 +100,9 @@ pre > code {
     font-size: 0.9rem;
 }
 
-p > code,
-li > code,
-em > code {
+p>code,
+li>code,
+em>code {
     font-size: 0.9rem;
     color: #f2a2d6;
     /*margin-right: 2rem;*/
@@ -127,55 +139,55 @@ code {
     position: relative;
 }
 
-code > span[data-line] {
+code>span[data-line] {
     border-left: 0.4rem solid transparent;
     padding: 0 0.4rem;
 }
 
-code > span[data-highlighted-line-id='space'] {
+code>span[data-highlighted-line-id='space'] {
     margin-left: 1em;
 }
 
-code > span[data-highlighted-line-id='addWithSpace'] > span:first-child {
+code>span[data-highlighted-line-id='addWithSpace']>span:first-child {
     margin-left: 0.45em;
 }
 
-code > span[data-highlighted-line-id='add'],
-code > span[data-highlighted-line-id='addWithSpace'] {
+code>span[data-highlighted-line-id='add'],
+code>span[data-highlighted-line-id='addWithSpace'] {
     background-color: #31293d;
     border-color: #ab95a5;
 }
 
-code > span[data-highlighted-line-id='point'] {
+code>span[data-highlighted-line-id='point'] {
     background-color: #41435b;
     border-color: #3a3c51;
 }
 
-code > span[data-highlighted-line-id='remove'] {
+code>span[data-highlighted-line-id='remove'] {
     background-color: #480f1d;
     border-color: #6c3e4a;
 }
 
-code > span[data-highlighted-line-id='add']::before,
-code > span[data-highlighted-line-id='addWithSpace']::before {
+code>span[data-highlighted-line-id='add']::before,
+code>span[data-highlighted-line-id='addWithSpace']::before {
     font-size: 0.9rem;
     color: #70985e;
     content: '+';
 }
 
-code > span[data-highlighted-line-id='add']::before {
+code>span[data-highlighted-line-id='add']::before {
     position: absolute;
 }
 
-code > span[data-highlighted-line-id='addWithSpace']::before {
+code>span[data-highlighted-line-id='addWithSpace']::before {
     position: relative;
 }
 
-code > span[data-highlighted-line-id='add'] > span:first-child {
+code>span[data-highlighted-line-id='add']>span:first-child {
     /*margin-left: 1rem;*/
 }
 
-code > span[data-highlighted-line-id='remove']::before {
+code>span[data-highlighted-line-id='remove']::before {
     font-size: 0.9rem;
     color: #901f3b;
     content: '-';
