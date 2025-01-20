@@ -1,35 +1,51 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+  content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
   theme: {
     colors: {
-      back: '#030d13',
-      black: '#000',
-      white: '#fff',
-      gray: '#52525b',
-      teal: '#004d4d',
-      dtcc: '#0e5447',
-      header: '#ffbfe8',
-      subText: '#ab95a5',
-      edmunds: '#18406A',
-      stonewain: '#F5AC3A',
-      infoBorder: '#96a9ff',
-      infoIcon: '#96ddff',
-      ideaIcon: '#ffed96',
-      ideaBorder: '#ffe048',
-      boxBG: '#111827',
-      pillBG: '#21222e',
-      pillText: '#96ddff',
-      action: '#EACCE3',
+      back: "#030d13",
+      black: "#000",
+      body: "rgba(0, 33, 33, 1)",
+      gray: "#52525b",
+      teal: "#004d4d",
+      header: "#000808",
+      subText: "#002222",
+      infoBorder: "#96a9ff",
+      infoIcon: "#96ddff",
+      ideaIcon: "#ffed96",
+      ideaBorder: "#ffe048",
+      boxBG: "#111827",
+      action: "#4d0000",
     },
     fontFamily: {
-      sans: ['Satoshi-Variable', 'sans-serif'],
-      sansItalic: ['Satoshi-VariableItalic', 'sans-serif'],
-      serif: ['goudy_old_style_pro-regular', 'serif'],
-      serifBold: ['goudy_old_style_pro-bold', 'serif'],
-      serifItalic: ['goudy_old_style_pro-italic', 'serif'],
-      mono: ['dm', 'monospace'],
+      sans: ["Satoshi-Variable", "sans-serif"],
+      sansItalic: ["Satoshi-VariableItalic", "sans-serif"],
+      serif: ["goudy_old_style_pro-regular", "serif"],
+      serifBold: ["goudy_old_style_pro-bold", "serif"],
+      serifItalic: ["goudy_old_style_pro-italic", "serif"],
+      mono: ["dm", "monospace"],
+      body: ["__clean-custom"],
+      bodyItalic: ["__clean-custom"],
+    },
+    extend: {
+      backgroundImage: {
+        "custom-gradient":
+          "linear-gradient(180deg, rgba(0,77,77,1) 0%, rgba(62,140,140,1) 50%, rgba(182,204,204,1) 100%);",
+      },
+      textShadow: {
+        action:
+          "-0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 0.5px 0 #000, 0.5px 0.5px 0 #000;",
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        ".text-shadow-action": {
+          textShadow:
+            "-0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 0.5px 0 #000, 0.5px 0.5px 0 #000;",
+        },
+      });
+    },
+  ],
 };

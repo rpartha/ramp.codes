@@ -2,15 +2,22 @@
 interface Props {
     customCss: String;
 }
-
+const currentYear = new Date().getFullYear();
 const { customCss } = Astro.props;
 ---
 
-<div class={`text-subText mt-4 flex flex-row${customCss}`}>
+<div class={`text-teal mt-4 flex flex-row${customCss}`}>
     <i class="ri-user-voice-line ri-md"></i><span
-        class="text-md pl-2 text-justify font-mono"
+        class="text-sm pl-2 text-justify font-body"
     >
-        Got any feedback or suggestions? I'd love to hear more about it.
-        <a href="#"><i class="ri-arrow-up-line md:ri-lg max-sm:ri-xs"></i></a></span
-    >
+        Feedback, suggestions, or wanna get in touch? <span class="border-b-2 border-dashed border-teal"><a href="mailto:rpartha1@pm.me">I'd love to hear about it</a></span>.
+
+    </span>
+</div>
+<div class={`text-teal mt-2 flex flex-row${customCss}`}>
+    <i class="ri-copyright-line ri-md"></i>
+    <span class="text-sm pl-2 text-justify font-body">
+        {currentYear} RAMASESHAN PARTHASARATHY
+        <a href="#"><i class="ri-arrow-up-line md:ri-lg max-sm:ri-xs"></i></a>
+    </span>
 </div>

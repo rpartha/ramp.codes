@@ -13,7 +13,7 @@ Imagine we are implementing a task scheduler. A user can select N tasks to be sc
 
 <img src="../../../non-linear-graph.png" alt="Image alt" width = "100%" height = "100%"/>
 
-Let's start by representing our list of tasks as a dependency tree, specifically as a _Directed Acyclic Graph (DAG)_. Every task in the tree can be represented as a vertex in the graph. By nature of the data structure, a task can have successor(s) and/or dependent(s) as long as circular dependencies are not formed. The above diagram illustrates a simple example of a non-linear graph where a node could have multiple dependents.
+Let's start by representing our list of tasks as a dependency tree, specifically as a _Directed Acyclic Graph (DAG)_. Every task in the tree can be represented as a vertex in the graph. By nature of the data structure, a task can have successor(s) and/or dependent(s) as long as circular dependencies are not formed. The above diagram illustrates a simple example of a non-linear graph where a node could have multiple successors.
 
  <div class="note bg-boxBG border-t-4 border-infoBorder rounded-b px-4 py-2 shadow-md" role="alert">
    <div class="flex">
@@ -23,7 +23,7 @@ Let's start by representing our list of tasks as a dependency tree, specifically
    </div>
  </div>
 
-## OUTLINING THE SOLUTION
+## Outlining The Solution
 
 Now that we are familiar with the problem let's dive into the algorithm. Since we are dealing with dependencies, it would be natural for the scheduler to start executing tasks that do not have any dependencies. Once those tasks have finished executing, we can mark them as complete, remove them from the task queue, and start executing their successor tasks [as they no longer have any dependencies]. In terms of a graph, tasks to be executed are nodes that have no incoming edges or have an indegree of 0. Due to the level-by-level approach of this Topological Sorting algorithm, it would be considered BFS.
 
@@ -86,7 +86,7 @@ public class TopologicalSort {
 }
 ```
 
-## TIME TO SORT
+## Sorting
 
 Now, it's time to move on to the heart of the algorithm. We can establish a linked-list queue of our tasks. As long as there are tasks still in the queue, we can keep picking off the ones that don't have dependencies and updating the indegrees accordingly. The below would be a basic implementation of this approach:
 
@@ -129,7 +129,7 @@ public class TopologicalSort {
 }
 ```
 
-## NOT QUITE THERE YET
+## Not Quite There Yet...
 
 There's a tiny problem with this approach. With this hypothetical system, a user could define inherited dependencies. One such inherited dependency could be if D depends on C and B, but C also depends on B (using the diagram from earlier). It seems kind of redundant to define it in this way, but we'll allow it here. To fix this, we can just factor out the common elements when computing the indegrees:
 
@@ -175,6 +175,6 @@ public class TopologicalSort {
 }
 ```
 
-## REMARKS
+## Remarks
 
 And with that, we've wrapped up the algorithm. But you're probably interested in finding out the time and space complexities. Using a graph of `T` nodes and `D` edges, coupled with our modified BFS approach, we would have a time complexity of `O(T + D)`. This is because we loop through all `T` nodes, and subsequently all `D` edges to update the neighbors. As far as auxillary space is concerned, `O(T)` is required to store all nodes in the queue.

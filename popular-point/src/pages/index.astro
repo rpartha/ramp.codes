@@ -12,140 +12,141 @@ const posts = (
     })
 ).sort((a, b) => -(a.data.pubDate.valueOf() - b.data.pubDate.valueOf()));
 ---
-
 <!doctype html>
 <html lang="en">
     <head>
         <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </head>
-    <body class="h-full select-none bg-back">
-        <div class="bg-back flex min-h-screen flex-col items-center justify-center">
-            <!-- Card or contents that should be centered vertically -->
-            <div class="max-w-full sm:max-w-prose px-5 py-12">
-                <img
-                    src="../logo/selfie-2.png"
-                    class="h-16 w-16 object-contain"
-                />
 
-                <!--<img
-                    src="../logo/R_Grid_logo-01-cropped.svg"
-                    class="h-16 w-16 object-contain"
-                />-->
-
-                <h1 class="font-serifBold mt-1 text-3xl text-white">
-                    Ramaseshan Parthasarathy
+    <!--<body class="relative h-full w-full text-body font-sans before:absolute before:inset-0 before:-z-10 before:bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] before:[background-size:16px_16px] bg-[#f5f5f5] before:[mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] before:[mask-size:cover]">-->
+    <body class="relative h-full w-full text-body font-sans before:absolute before:inset-0 before:-z-10 before:bg-[linear-gradient(transparent,transparent_15px,#e5e7eb_15px,#e5e7eb_16px),linear-gradient(90deg,transparent,transparent_15px,#e5e7eb_15px,#e5e7eb_16px)] before:[background-size:16px_16px] bg-[#f5f5f5] before:[mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] before:[mask-size:cover]">
+        <div class="flex min-h-screen items-center justify-center px-4 sm:px-6 lg:px-8">
+            <!-- Content Wrapper -->
+            <div class="content flex min-h-screen flex-col justify-center">
+                <!--<div class="absolute inset-0 left-[1rem] right-[1rem] sm:left-[1.5rem] sm:right-[1.5rem] lg:left-[2rem] lg:right-[2rem] border-x border-dashed border-gray-500 pointer-events-none"></div>-->
+                <!-- Card -->
+                <div class="card max-w-screen-md mx-auto rounded-lg px-6 py-8 sm:px-10 sm:py-12">
+                <div class="flex items-center justify-between">
+                    <!-- Logo -->
+                    <img
+                        src="../logo/rp-logo_line.svg"
+                        alt="Logo"
+                        class="w-10 h-10 object-contain"
+                    />
+                                        <!-- Search Icon Button -->
+                    <!--
+                    <button class="search-btn p-2 text-body hover:text-action transition-colors">
+                        <i class="ri-search-2-line text-2xl"></i>
+                    </button>
+                    -->
+                </div>
+                <!-- Name -->
+                <h1 class="font-serifBold mt-4 text-teal text-3xl">
+                Hi there, I'm Ram!
                 </h1>
-                <p class="text-subText text-md mt-0.5 font-mono">
-                    <i class="ri-briefcase-2-line"></i><span> Software Engineer @ DTCC</span>
-                </p>
-                <p class="text-subText text-md font-mono">
-                    <i class="ri-map-pin-line"></i><span>
-                        Chesterfield, NJ</span
-                    >
-                </p>
-                <p
-                    class="mt-2 text-justify font-serif text-lg leading-snug text-white"
-                >
-                    Welcome to my digital home, where the power of AI intersects the art of back-end engineering!<br/><br/>
 
-                    I'm currently pursuing a <em class="font-serifItalic">Master's in Computer Science</em> with a specialization in <em class="font-serifItalic">Artificial Intelligence</em> at UC Boulder. While my academic focus is on pushing the boundaries of intelligent systems,
-                    my professional experience lies in back-end development as a full-stack engineer. I thrive on building scalable systems, designing efficient APIs, and delivering seamless software solutions.<br/><br/>
+                <!-- About -->
+                <p class="mt-6 text-justify font-body text-sm leading-snug">
+                    I'm currently pursuing a <em class="font-serifBoldItalic">Master's in Computer Science</em> with a specialization in
+                    <em class="font-serifBoldItalic">Artificial Intelligence</em> at UC Boulder. While my academic focus is on pushing the
+                    boundaries of intelligent systems, my professional experience lies in back-end development as a full-stack engineer.
+                    I thrive on building scalable systems, designing efficient APIs, and delivering seamless software solutions.<br/><br/>
 
-                    Feel free to explore my site and connect with me — innovation grows through collaboration. 🚀
+                    Outside of work, I've been practicing Tabla under the guidance of Dr. Pratik Devasthale for ~15 years. As part of that
+                    journey, I've obtained a Visharad Purna (the equivalent of a Bachelors in Music). I began teaching students out of my
+                    home for ~2 years now.<br/><br/>
 
+                    Explore my site and connect with me — innovation grows through collaboration!
                 </p>
-                <h2 class="text-header mt-4 font-mono text-lg font-bold">
-                    FRESH ENTRIES
-                </h2>
-                <p
-                    class="mt-2 text-justify font-serif text-lg leading-snug text-white"
-                >
+
+                <!-- Grid Container -->
+                <div class="mt-6 grid sm:grid-cols-2 md:grid-cols-3 gap-5">
+                    <div class="rounded overflow-hidden shadow-lg ">
+                    <div class="px-6 py-4">
+                        <div class="font-serifBold text-md mb-2">Work</div>
+                        <p class="text-gray-700 font-body text-sm">SWE @ DTCC</p>
+                    </div>
+                    </div>
+
+                    <div class=" rounded overflow-hidden shadow-lg">
+                    <div class="px-6 py-4">
+                        <div class="font-serifBold text-md mb-2">Location</div>
+                        <p class="text-gray-700 font-body text-sm">Chesterfield, NJ</p>
+                    </div>
+                    </div>
+                    <div class=" rounded overflow-hidden shadow-lg">
+                    <div class="px-6 py-4">
+                        <div class="font-serifBold text-md mb-2">Comfort Tech Stack</div>
+                        <p class="text-gray-700 font-body text-sm">Spring Boot, Angular</p>
+                    </div>
+                    </div>
+                    <div class=" rounded overflow-hidden shadow-lg">
+                    <div class="px-6 py-4">
+                        <div class="font-serifBold text-md mb-2">Affiliations</div>
+                        <p class="text-gray-700 font-body text-sm">麦わら大船団/Hufflepuff<br/>Ovo-lacto Vegetarian</p>
+                    </div>
+                    </div>
+                    <div class=" rounded overflow-hidden shadow-lg">
+                    <div class="px-6 py-4">
+                        <div class="font-serifBold text-md mb-2">Passions</div>
+                        <p class="text-gray-700 font-body text-sm">Travel, Hiking, Watches, Figurines</p>
+                    </div>
+                    </div>
+
+                    <div class="rounded overflow-hidden shadow-lg">
+                    <div class="px-6 py-4">
+                        <div class="font-serifBold text-md mb-2">Last Read</div>
+                        <p class="text-gray-700 font-body text-sm"><i>Salvation of a Saint</i>, Keigo Higashano</p>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- Fresh Entries -->
+                <h2 class="text-header mt-8 text-lg font-serifBold">Fresh Entries</h2>
+                <p class="mt-2 font-body text-sm leading-snug">
                     I occasionally like to write about stuff.
                 </p>
-                <section class="group relative mt-2">
-                    <ul>
-                        {
-                            posts
-                                .slice(0,4)
-                                .map((post) => (
-                                    <li class="mb-2">
-                                        <a
-                                            href={`/blog/${post.slug}/`}
-                                            class="title font-serifBold text-lg text-white"
-                                        >
-                                            {post.data.title}
-                                        </a>
-                                        <div class="date text-subText font-mono text-xs capitalize">
-                                            <span>
-                                                <i class="ri-calendar-line" />
-                                                <FormattedDate
-                                                    date={post.data.pubDate}
-                                                />
-                                                ·
-                                            </span>
-                                            <ReadingTime post={post} />
-                                        </div>
-                                    </li>
-                                ))
-                        }
+                <section class="group relative mt-4">
+                    <ul class="space-y-4">
+                        {posts.slice(0, 4).map((post) => (
+                            <li class="mb-2">
+                                <a
+                                    href={`/blog/${post.slug}/`}
+                                    class="block text-md font-serifBold hover:underline"
+                                >
+                                    {post.data.title}
+                                </a>
+                                <div class="date text-subText font-mono text-xs">
+                                    <span>
+                                        <i class="ri-calendar-line"></i>
+                                        <FormattedDate date={post.data.pubDate} /> ·
+                                        <ReadingTime post={post} />
+                                    </span>
+                                </div>
+                            </li>
+                        ))}
                     </ul>
-                    <a
-                        href="/blog"
-                        class="text-action mt-2 inline-block font-mono"
-                    >
+                    <a href="/blog" class="text-action text-sm mt-2 inline-block font-body">
                         <span>Notebook</span>
                         <i class="ri-arrow-right-line"></i>
                     </a>
                 </section>
-                <h2 class="text-header mt-4 font-mono text-lg font-bold">
-                    PASSIONS
-                </h2>
-                <ul
-                    class="mt-2 list-['﹡_'] px-5 text-justify font-serif text-lg leading-snug text-white"
-                >
-                    <li>Tabla Player and Teacher<sup>†</sup></li>
-                    <li>Travel</li>
-                    <li>One Piece</li>
-                    <li>Logic</li>
-                    <li>Young the Giant</li>
-                </ul>
-                <br/>
-                <span class = "text-justify font-serif text-lg leading-snug text-white font-serifItalic"><sup>†</sup>I've been playing Tabla for 14+ years under the guidance of Dr. Pratik Devasthale,
-                and obtained a Visharad Purna (equivalent of Bachelor's in Music). Currently teaching out of my home for 2+ years.</span>
-                <h2 class="text-header mt-4 font-mono text-lg font-bold">
-                    ON MY SHELF
-                </h2> <p
-                    class="mt-2 text-justify font-serif text-lg leading-snug text-white"
-                >
-                    Fave reads in no particular order.
-                </p>
-                <ul
-                    class="mt-2 list-['﹡_'] px-5 text-justify font-serif text-lg leading-snug text-white"
-                >
-                    <li><em class="font-serifItalic">The Master: The Long Run and Beautiful Game of Roger Federer</em>, Christopher Clarey</li>
-                    <li><em class="font-serifItalic">The Golden Spoon</em>, Jessa Maxwell</li>
-                    <li><em class="font-serifItalic">The Internet Con: How to Seize the Means of Computation</em>, Cory Doctrow</li>
-                    <li><em class="font-serifItalic">A Midsummer's Equation</em>, Keigo Higashino</li>
-                    <li><em class="font-serifItalic">Salvation of a Saint</em>, Keigo Higashino</li>
-                </ul>
-                <h2 class="text-header mt-4 font-mono text-lg font-bold">
-                    FIND ME ON THE INTERWEB
-                </h2>
-                <div class="text-action mt-2 font-mono">
+
+                <!-- Social Links -->
+                <!--<h2 class="text-header mt-6 text-lg font-serifBold drop-shadow-lg">Find Me On The Interweb</h2>
+                <div class="mt-4 space-x-4 text-action font-mono">
                     <a href="https://www.linkedin.com/in/ramaseshanpar/">
-                        <i class="ri-arrow-right-up-line"></i>
-                        <span class="mr-1 lg:mr-4">LinkedIn</span>
+                        <i class="ri-linkedin-line"></i> LinkedIn
                     </a>
                     <a href="mailto:ramaseshan.par@gmail.com">
-                        <i class="ri-arrow-right-up-line"></i>
-                        <span class="mr-1 lg:mr-4">Email</span>
+                        <i class="ri-mail-line"></i> Email
                     </a>
                     <a href="https://www.instagram.com/ramp.codes/">
-                        <i class="ri-arrow-right-up-line"></i>
-                        <span>Instagram</span>
+                        <i class="ri-instagram-line"></i> Instagram
                     </a>
-                </div>
-                <Footer customCss=""/>
+                </div>-->
+                <Footer customCss="" />
             </div>
         </div>
     </body>

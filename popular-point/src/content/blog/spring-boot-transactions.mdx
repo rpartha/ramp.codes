@@ -8,7 +8,7 @@ draft: false
 
 Use today's post as a simple and practical explanation of transactions, and how to handle them using Spring Boot. We'll cover at least the basics.
 
-## What in the heck are Transactions?
+## What in The Heck Are Transactions?
 
 Transactions are a fundamental concept in database management systems (DBMS). They ensure that a series of database operations are treated as a single unit of work. This means that either all of the operations in the transaction succeed, or none of them do. This is important for maintaining the Atomicity, Consistency, Isolation, and Durability (ACID) principles. Without transactions, a partial failure could leave your data in an inconsistent state.
 
@@ -47,7 +47,7 @@ public class SomeService {
 The above code is a much simplified version of what Spring Boot does under the hood:
 
 <ul
-    class="mt-1 list-decimal pl-12 pr-8 text-justify font-serif text-lg leading-snug text-white sublist"
+    class="mt-1 list-decimal pl-12 pr-8 text-justify font-body text-sm leading-snug text-body sublist"
 >
     <li>Transactions will start upon successful connection to a database. In the case of Enterprise applications, usually a datasource is configured somewhere (e.g. Hashicorp Vault) and connections will be retrieved from that. But you could also just get the connections from a `DriverManager` with the same input parameters.</li>
     <li>Turning off auto-commits does not ensure that every SQL execution occurs in its own transaction. Instead, you'll need to take the wheel and call `commit` yourself as long as the transaction is still open.</li>
@@ -111,7 +111,7 @@ But to truly master the usage of this annotation, you should probably understand
 We can specify different propagation behaviors that determine how transactions are managed between method calls. You can define this behavior using the `propagation` attribute with the following options:
 
 <ul
-    class="mt-1 list-['—_'] pl-12 pr-8 text-justify font-serif text-lg leading-snug text-white sublist"
+    class="mt-1 list-['—_'] pl-12 pr-8 text-justify font-body text-sm leading-snug text-body sublist"
 >
     <li>_`Propagation.REQUIRED`_ is the default behavior which states that the method will either take part in an existing transaction or create a new one if none exists.</li>
     <li>_`Propagation.REQUIRES_NEW`_ will ensure the method _always_ runs in a new transaction, and will suspend any existing transaction.</li>
@@ -127,7 +127,7 @@ We can specify different propagation behaviors that determine how transactions a
 We can also define the transaction isolation level which dictates how concurrent transactions interact with eachother. The `isolation` attribute allows for the following options:
 
 <ul
-    class="mt-1 list-['—_'] pl-12 pr-8 text-justify font-serif text-lg leading-snug text-white sublist"
+    class="mt-1 list-['—_'] pl-12 pr-8 text-justify font-body text-sm leading-snug text-body sublist"
 >
     <li>
       _`DEFAULT`_ will use the default isolation level of the underlying DB.
@@ -239,7 +239,7 @@ public class PaymentService {
 We'd be initially inclined to mark the entire method as `@Transactional` and use a single `EntityManager` to atomically perform all operations. But the problem lies within the API call - it could potentically be an expensive call that could deplete our available DB connections. Let's examine what exactly is going on when `initiatePayment(request)` is invoked:
 
 <ul
-    class="mt-1 list-decimal pl-12 pr-8 text-justify font-serif text-lg leading-snug text-white sublist"
+    class="mt-1 list-decimal pl-12 pr-8 text-justify font-body text-sm leading-snug text-body sublist"
 >
     <li>The transactional aspect starts a new transaction using the `EntityManager`. The connection pool now has one less connection.</li>
     <li>Call an external API, but keep the connection from earlier.</li>
@@ -286,10 +286,10 @@ public class PaymentService {
 In this example, we:
 
 <ul
-    class="mt-1 list-['—_'] pl-12 pr-8 text-justify font-serif text-lg leading-snug text-white sublist"
+    class="mt-1 list-['—_'] pl-12 pr-8 text-justify font-body text-sm leading-snug text-body sublist"
 >
     <li>Defined our own transaction with a custom propagation behavior and timeout.</li>
-    <li>Performed payment scheduling logic, including authentication and persisting to the DB.</li>
+    <li>Performed payment scheduling logic, including authentication and DB persistance.</li>
     <li>Manually committed the transaction.</li>
     <li>Rolled back the transaction in case of error, and logged the exception.</li>
 </ul>
