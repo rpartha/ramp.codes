@@ -17,6 +17,7 @@ export default {
       boxBG: "#111827",
       action: "#00274d",
       copy: "#eacce3",
+      logo: "linear-gradient(135deg, #004d4d 0%, #b6cccc 100%)",
     },
     fontFamily: {
       sans: ["Satoshi-Variable", "sans-serif"],
@@ -41,6 +42,13 @@ export default {
         ".text-shadow-action": {
           textShadow:
             "-0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 0.5px 0 #000, 0.5px 0.5px 0 #000;",
+        },
+        ".gradient-text": {
+          backgroundImage: "linear-gradient(135deg, #004d4d 0%, #b6cccc 100%)",
+          backgroundClip: "text",
+          WebkitBackgroundClip: "text",
+          color: "transparent", // Makes the gradient visible inside the text
+          WebkitTextFillColor: "transparent",
         },
       });
     },
