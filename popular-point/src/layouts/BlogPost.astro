@@ -18,7 +18,7 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
 
         <script>
             let copyButtonIcon =
-                '<i class="ri-file-copy-line ri-xl text-action flex max-sm:hidden"></i>';
+                '<i class="ri-file-copy-line ri-xl text-copy flex max-sm:hidden"></i>';
             let codeBlocks = Array.from(document.querySelectorAll('pre'));
             let figCaptions = Array.from(
                 document.querySelectorAll('figcaption'),
@@ -69,8 +69,8 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
             }
         </script>
     </head>
-    <!--<body class="relative h-full w-full text-body font-sans before:absolute before:inset-0 before:-z-10 before:bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] before:[background-size:16px_16px] bg-[#f5f5f5] before:[mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] before:[mask-size:cover]">-->
-    <body class="relative h-full w-full text-body font-sans before:absolute before:inset-0 before:-z-10 before:bg-[linear-gradient(transparent,transparent_15px,#e5e7eb_15px,#e5e7eb_16px),linear-gradient(90deg,transparent,transparent_15px,#e5e7eb_15px,#e5e7eb_16px)] before:[background-size:16px_16px] bg-[#f5f5f5] before:[mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] before:[mask-size:cover]">
+
+    <body class="custom-bg">
         <div class="flex min-h-screen items-center justify-center px-4 sm:px-6 lg:px-8">
         <!-- Card or contents that should be centered -->
         <div class="max-w-prose w-full py-12">

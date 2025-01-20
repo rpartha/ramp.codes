@@ -270,26 +270,19 @@ html {
 }
 
 @layer utilities {
-  .custom-gradient {
-    background: rgb(0, 77, 77);
-    background: -moz-linear-gradient(
-      180deg,
-      rgba(0, 77, 77, 1) 0%,
-      rgba(62, 140, 140, 1) 50%,
-      rgba(182, 204, 204, 1) 100%
-    );
-    background: -webkit-linear-gradient(
-      180deg,
-      rgba(0, 77, 77, 1) 0%,
-      rgba(62, 140, 140, 1) 50%,
-      rgba(182, 204, 204, 1) 100%
-    );
-    background: linear-gradient(
-      180deg,
-      rgba(0, 77, 77, 1) 0%,
-      rgba(62, 140, 140, 1) 50%,
-      rgba(182, 204, 204, 1) 100%
-    );
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#004d4d",endColorstr="#b6cccc",GradientType=1);
+  .custom-bg {
+    @apply relative h-full w-full text-body font-sans;
+    @apply before:absolute before:inset-0 before:-z-10 before:bg-[linear-gradient(transparent,transparent_15px,#e5e7eb_15px,#e5e7eb_16px),linear-gradient(90deg,transparent,transparent_15px,#e5e7eb_15px,#e5e7eb_16px)];
+    @apply before:[background-size:16px_16px] bg-[#f5f5f5];
+    @apply before:[mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] before:[mask-size:cover];
   }
+}
+
+.no-select {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 }

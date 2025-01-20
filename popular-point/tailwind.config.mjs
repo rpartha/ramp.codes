@@ -15,7 +15,8 @@ export default {
       ideaIcon: "#ffed96",
       ideaBorder: "#ffe048",
       boxBG: "#111827",
-      action: "#4d0000",
+      action: "#00274d",
+      copy: "#eacce3",
     },
     fontFamily: {
       sans: ["Satoshi-Variable", "sans-serif"],
@@ -28,10 +29,6 @@ export default {
       bodyItalic: ["__clean-custom"],
     },
     extend: {
-      backgroundImage: {
-        "custom-gradient":
-          "linear-gradient(180deg, rgba(0,77,77,1) 0%, rgba(62,140,140,1) 50%, rgba(182,204,204,1) 100%);",
-      },
       textShadow: {
         action:
           "-0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 0.5px 0 #000, 0.5px 0.5px 0 #000;",
