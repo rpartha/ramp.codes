@@ -49,6 +49,8 @@ export default {
           WebkitBackgroundClip: "text",
           color: "transparent", // Makes the gradient visible inside the text
           WebkitTextFillColor: "transparent",
+          "-moz-background-clip": "text", // Firefox
+          textFillColor: "#004d4d", // Fallback solid color for Firefox
         },
       });
     },
