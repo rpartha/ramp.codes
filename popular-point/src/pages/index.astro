@@ -110,7 +110,7 @@ const posts = (
                   {posts.slice(0, 4).map((post) => (
                   <li class="mb-2">
                      <a
-                        href={`/blog/${post.slug}/`}
+                        href={`/notebook/${post.slug}/`}
                         class="block text-md font-serifBold hover:underline"
                         >
                      {post.data.title}
@@ -126,7 +126,7 @@ const posts = (
                   </li>
                   ))}
                </ul>
-               <a href="/blog" class="text-action text-sm mt-2 inline-block font-body">
+               <a href="/notebook" class="text-action text-sm mt-2 inline-block font-body">
                <span>Notebook</span>
                <i class="ri-arrow-right-line"></i>
                </a>
