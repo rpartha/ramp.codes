@@ -14,7 +14,7 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
 <!doctype html>
 <html lang="en">
     <head>
-        <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+        <BaseHead title={title} description={description} />
 
         <script>
             let copyButtonIcon =
@@ -70,7 +70,7 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
         </script>
     </head>
 
-    <body class="custom-bg">
+    <body class="custom-bg no-select">
         <div class="flex min-h-screen items-center justify-center px-4 sm:px-6 lg:px-8">
         <!-- Card or contents that should be centered -->
         <div class="max-w-prose w-full py-12">

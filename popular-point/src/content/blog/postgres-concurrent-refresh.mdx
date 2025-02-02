@@ -6,11 +6,13 @@ author: Ram
 draft: false
 ---
 
+import InfoBox from '../../components/InfoBox.astro';
+
 ## Happy New Year
 
 I realize it's been a long time since I last posted, and I wanted to start the new
 year off right with a good post based on an experience I encountered. I'll try to
-post sort of regularly going forward. Hope y'all enjoy this one!
+post sort of regularly going forward. Hope this post will yield useful insight!
 
 ## A Friendly Recap
 
@@ -97,14 +99,7 @@ calculates the total price of all orders a customer has made:
     customer_id;
 ```
 
-<div class="note bg-boxBG border-t-4 border-infoBorder rounded-b px-4 py-2 shadow-md" role="alert">
-  <div class="flex">
-    <div class="py-1 inline-flex items-center flex-row">
-      <i class="ri-information-2-line ri-1x text-infoIcon"></i>
-      <p class="font-sans font-bold text-sm text-infoIcon">Be mindful when replacing views as it may break dependent entities such as stored procedures or other views.</p>
-    </div>
-  </div>
-</div>
+<InfoBox boxText = "Be mindful when replacing views as it may break dependent entities such as stored procedures or other views."/>
 
 ### Materialized Views
 
@@ -165,17 +160,7 @@ as the data that populates that screen depends on the materialized view. This sp
 high-availability systems, but rest asssured, we will explore in this post what we can do to avoid
 this particular pitfall.
 
-<div
-  class="note bg-boxBG border-t-4 border-infoBorder rounded-b px-4 py-2 shadow-md"
-  role="alert"
->
-  <div class="flex">
-    <div class="py-1 inline-flex items-center flex-row">
-      <i class="ri-information-2-line ri-1x text-infoIcon"></i>
-      <p class="font-sans font-bold text-sm text-infoIcon">Remember that a refresh can occur once for a materialized view at any given time.</p>
-    </div>
-  </div>
-</div>
+<InfoBox boxText = "Remember that a refresh can occur once for a materialized view at any given time."/>
 
 #### Identifying Dead-Locks
 
@@ -239,17 +224,7 @@ refreshed? Postgres allows the `REFRESH MATERIALIZED VIEW [CONCURRENTLY]` option
 is to allow allow the materialized view to remain accessible for reads during the refresh process.
 The single prerequisite is that the materialized view requires a `UNIQUE` index on it.
 
-<div
-  class="note bg-boxBG border-t-4 border-infoBorder rounded-b px-4 py-2 shadow-md"
-  role="alert"
->
-  <div class="flex">
-    <div class="py-1 inline-flex items-center flex-row">
-      <i class="ri-information-2-line ri-1x text-infoIcon"></i>
-      <p class="font-sans font-bold text-sm text-infoIcon">Concurrent refreshes will be faster than standard refreshes for a smaller record size but is in general slow since it requires more system resources to maintain consistency.</p>
-    </div>
-  </div>
-</div>
+<InfoBox boxText = "Concurrent refreshes will be faster than standard refreshes for a smaller record size but is in general slow since it requires more system resources to maintain consistency."/>
 
 ## Remarks
 
@@ -257,4 +232,4 @@ PostgreSQL's materialized views can really boost performance in applications tha
 lot of data. But to get the most out of them, it's important to use the `REFRESH MATERIALIZED
 VIEW [CONCURRENTLY]` command effectively. Even with automated solutions as described, (1) there
 is still some overhead in maintaining the scheduler job, and (2) there will be some stale data
-between refreshes. Hope this post gave useful insight!
+between refreshes.

@@ -13,8 +13,8 @@ const options = {
 };
 
 export default defineConfig({
-  site: "https://example.com",
-  integrations: [mdx(), sitemap(), tailwind()],
+  site: "https://ramp.codes",
+  integrations: [mdx(), sitemap({}), tailwind()],
   markdown: {
     syntaxHighlight: false, // Disable syntax built-in syntax hightlighting from astro
     rehypePlugins: [[rehypePrettyCode, options]],
