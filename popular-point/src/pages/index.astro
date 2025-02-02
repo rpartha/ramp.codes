@@ -2,8 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { getCollection } from 'astro:content';
-import FormattedDate from '../components/FormattedDate.astro';
-import ReadingTime from '../components/ReadingTime.astro';
+import PostList from '../components/PostList.astro';
 import Footer from '../components/Footer.astro';
 
 const posts = (
@@ -107,24 +106,9 @@ const posts = (
             </p>
             <section class="group relative mt-4">
                <ul class="space-y-4">
-                  {posts.slice(0, 4).map((post) => (
-                  <li class="mb-2">
-                     <a
-                        href={`/notebook/${post.slug}/`}
-                        class="block text-md font-serifBold hover:underline"
-                        >
-                     {post.data.title}
-                     </a>
-                     <div class="date text-subText font-mono text-xs">
-                        <span>
-                           <i class="ri-calendar-line"></i>
-                           <FormattedDate date={post.data.pubDate} />
-                           ·
-                           <ReadingTime post={post} />
-                        </span>
-                     </div>
-                  </li>
-                  ))}
+                  {
+                    posts.slice(0, 4).map((post) => (<PostList post={post} customCss=""/>))
+                  }
                </ul>
                <a href="/notebook" class="text-action text-sm mt-2 inline-block font-body">
                <span>Notebook</span>
