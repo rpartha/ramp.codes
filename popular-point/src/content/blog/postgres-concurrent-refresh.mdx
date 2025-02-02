@@ -1,10 +1,16 @@
 ---
-title: 'Postgres: Concurrent Refresh'
-description: 'How to implement Concurrent Refresh for Materialized Views'
-pubDate: 'Feb 01 2025'
+title: "Postgres: Concurrent Refresh"
+description: "How to implement Concurrent Refresh for Materialized Views"
+pubDate: "Feb 01 2025"
 author: Ram
-draft: true
+draft: false
 ---
+
+## Happy New Year
+
+I realize it's been a long time since I last posted, and I wanted to start the new
+year off right with a good post based on an experience I encountered. I'll try to
+post sort of regularly going forward. Hope y'all enjoy this one!
 
 ## A Friendly Recap
 
@@ -28,10 +34,16 @@ Imagine a table called `t_orders` that tracks the sales of an ecommerce site:
   <table class="border-collapse border border-gray-200 text-white">
     <thead>
       <tr class="bg-gray-100">
-        <th class="px-4 py-2 border border-gray-300 text-left font-semibold">id</th>
-        <th class="px-4 py-2 border border-gray-300 text-left font-semibold">customer_id</th>
-        <th class="px-4 py-2 border border-gray-300 text-left font-semibold">order_date</th>
-        <th class="px-4 py-2 border border-gray-300 text-left font-semibold">total_amount</th>
+        <th class="px-4 py-2 border border-gray-300 text-left font-bold">id</th>
+        <th class="px-4 py-2 border border-gray-300 text-left font-bold">
+          customer_id
+        </th>
+        <th class="px-4 py-2 border border-gray-300 text-left font-bold">
+          order_date
+        </th>
+        <th class="px-4 py-2 border border-gray-300 text-left font-bold">
+          total_amount
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -88,9 +100,9 @@ calculates the total price of all orders a customer has made:
 <div class="note bg-boxBG border-t-4 border-infoBorder rounded-b px-4 py-2 shadow-md" role="alert">
   <div class="flex">
     <div class="py-1 inline-flex items-center flex-row">
-     <i class="ri-information-2-line ri-1x text-infoIcon"></i>
-     <p class="font-sans font-semibold text-sm text-infoIcon">Be mindful when replacing views as it may break dependent entities such as stored procedures or other views.</p>
-   </div>
+      <i class="ri-information-2-line ri-1x text-infoIcon"></i>
+      <p class="font-sans font-bold text-sm text-infoIcon">Be mindful when replacing views as it may break dependent entities such as stored procedures or other views.</p>
+    </div>
   </div>
 </div>
 
@@ -120,25 +132,129 @@ refresh the view. Manual refreshes are not feasible for any system.
 
 So, how do you keep materialized views, such as the one above, up to date? You can use the
 `REFRESH MATERIALIZED VIEW` command to recalculate and reload the data. Rather than executing
-this command manually, a scheduler that runs every X minutes could potentially do this for you.
+this command manually, a scheduler that runs every _m_ minutes could potentially do this for you.
 Below is a snippet of what this looks like in a Spring Boot application.
+
+```java title="MVRefreshScheduler.java" {13}#point
+public class MVRefreshScheduler {
+  @Autowired
+  private UtilRepository utilRepository;
+
+  @Scheduled(cron = "*/m * * * *")
+  public void refreshMV() {
+    if (!schedulerEnabled) {
+      log.warn("MVRefreshScheduler not enabled");
+      return;
+    }
+
+    try {
+      utilRepository.callRefresh();
+    } catch (Exception e) {
+      log.error(e);
+    }
+  }
+}
+```
+
+#### Uh-Oh!
 
 However, we still run into a potential roadblock -- **this operation locks the materialized view
 for the duration of the refresh**, which means users can't access anything that depends on that
-view. This spells trouble for high-availability systems, but rest asssured, we will explore in
-this post what we can do to avoid this pitfall.
+view. I've encountered a scenario where clients accessing a certain screen triggers a deadlock
+as the data that populates that screen depends on the materialized view. This spells trouble for
+high-availability systems, but rest asssured, we will explore in this post what we can do to avoid
+this particular pitfall.
 
-## THE HACK SOLUTION
+<div
+  class="note bg-boxBG border-t-4 border-infoBorder rounded-b px-4 py-2 shadow-md"
+  role="alert"
+>
+  <div class="flex">
+    <div class="py-1 inline-flex items-center flex-row">
+      <i class="ri-information-2-line ri-1x text-infoIcon"></i>
+      <p class="font-sans font-bold text-sm text-infoIcon">Remember that a refresh can occur once for a materialized view at any given time.</p>
+    </div>
+  </div>
+</div>
 
-Before I get into any solution, it would probaboy be useful to identify the locks from the DB
-itself. There's a nifty little query (shown below) that does exactly that.
+#### Identifying Dead-Locks
 
-What I mean by "hack" is a solution that I quickly cobbled up together to patch this issue.
-All that needs to be done is to duplicate the view and treat the duplicate as a backup in
-case the primary view fails. This includes duplicating the scheduler in place to refresh it.
-Now here me out -- this is obviously not the ideal solution but it works to some extent. At
-the time, we settled for this work-around as we noticed some upgrades on certain servers were
-interfering with our judgement and causing confusion.
+It would probably be useful to identify the locks from the DB itself. Below is a nifty little query that does exactly that:
 
-For brevity, I'm going to skip to the section of the code that decides which view to use since
-the rest is pretty much exactly the same.
+```sql title="do_locks_exist.sql"
+SELECT EXISTS (
+  SELECT
+    1
+  FROM
+    pg_stat_activity ps
+    JOIN pg_locks pl on ps.pid = pl.pid
+  WHERE
+    pl.relation = 'schema.my_table'::regclass
+    AND NOT pl.granted
+    AND ps.datname = current_database();
+);
+```
+
+## The "Hack"
+
+The query alone obviously isn't helpful, so we can "hack" a solution - something that I quickly
+cobbled up together to patch this issue. All that needs to be done is to duplicate the view and
+treat the duplicate as a backup in case the primary view fails. Now here me out -- this is far
+from the ideal solution -- but it works to a good extent. At the time, we settled for this work-around
+as upgrades on our servers were interfering with our judgement. Hence, we settled for the most basic approach.
+
+With this approach, one need simply check if there exists a lock on the view. The implementation of
+the `doesViewContainLock()` method is given above.
+
+```java title="MVRefreshScheduler.java" {13}#remove {14-18}#add
+public class MVRefreshScheduler {
+  @Autowired
+  private UtilRepository utilRepository;
+
+  @Scheduled(cron = "*/m * * * *")
+  public void refreshMV() {
+    if (!schedulerEnabled) {
+      log.warn("MVRefreshScheduler not enabled");
+      return;
+    }
+
+    try {
+      utilRepository.callRefresh();
+      if (utilRepository.doesViewContainLock("schema.mv_primary")) {
+        utilRepository.callRefreshBackup();
+      } else {
+        utilRepository.callRefreshPrimary();
+      }
+    } catch (Exception e) {
+      log.error(e);
+    }
+  }
+}
+```
+
+## Show Me The <em class= "font-serifBold">Real</em> Solution
+
+What if I told you there was a way to access the materialized view while it was still being
+refreshed? Postgres allows the `REFRESH MATERIALIZED VIEW [CONCURRENTLY]` option whose sole purpose
+is to allow allow the materialized view to remain accessible for reads during the refresh process.
+The single prerequisite is that the materialized view requires a `UNIQUE` index on it.
+
+<div
+  class="note bg-boxBG border-t-4 border-infoBorder rounded-b px-4 py-2 shadow-md"
+  role="alert"
+>
+  <div class="flex">
+    <div class="py-1 inline-flex items-center flex-row">
+      <i class="ri-information-2-line ri-1x text-infoIcon"></i>
+      <p class="font-sans font-bold text-sm text-infoIcon">Concurrent refreshes will be faster than standard refreshes for a smaller record size but is in general slow since it requires more system resources to maintain consistency.</p>
+    </div>
+  </div>
+</div>
+
+## Remarks
+
+PostgreSQL's materialized views can really boost performance in applications that handle a
+lot of data. But to get the most out of them, it's important to use the `REFRESH MATERIALIZED
+VIEW [CONCURRENTLY]` command effectively. Even with automated solutions as described, (1) there
+is still some overhead in maintaining the scheduler job, and (2) there will be some stale data
+between refreshes. Hope this post gave useful insight!

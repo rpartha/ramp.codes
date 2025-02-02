@@ -14,9 +14,9 @@ export default {
       infoIcon: "#96ddff",
       ideaIcon: "#ffed96",
       ideaBorder: "#ffe048",
-      boxBG: "#111827",
+      boxBG: "#000000",
       action: "#00274d",
-      copy: "#eacce3",
+      copy: "#d5d8da",
       logo: "linear-gradient(135deg, #004d4d 0%, #b6cccc 100%)",
     },
     fontFamily: {
