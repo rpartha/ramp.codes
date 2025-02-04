@@ -2,7 +2,6 @@
 interface Props {
     customCss: String;
 }
-const currentYear = new Date().getFullYear();
 const { customCss } = Astro.props;
 ---
 
@@ -17,7 +16,14 @@ const { customCss } = Astro.props;
 <div class={`text-teal mt-2 flex flex-row${customCss}`}>
     <i class="ri-copyright-line ri-md"></i>
     <span class="text-sm pl-2 text-justify font-body whitespace-nowrap">
-        {currentYear} RAMASESHAN PARTHASARATHY
+        <span id="current-year"></span> RAMASESHAN PARTHASARATHY
         <a href="#"><i class="ri-arrow-up-line md:ri-lg max-sm:ri-xs"></i></a>
     </span>
 </div>
+
+<script>
+    let currentYearElement = document.getElementById('current-year');
+    if (currentYearElement) {
+        currentYearElement.textContent = new Date().getFullYear().toString();
+    }
+</script>
