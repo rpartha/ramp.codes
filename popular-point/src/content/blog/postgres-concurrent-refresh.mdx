@@ -7,6 +7,7 @@ draft: false
 ---
 
 import InfoBox from '../../components/InfoBox.astro';
+import Collapsible from '../../components/Collapsible.astro';
 
 ## Happy New Year
 
@@ -162,23 +163,23 @@ this particular pitfall.
 
 <InfoBox boxText = "Remember that a refresh can occur once for a materialized view at any given time."/>
 
-#### Identifying Dead-Locks
+<Collapsible collapseTitle = "Aside: Identifying Deadlocks" customCss = " pl-[1.5rem] pt-5 text-sm">
+    It would probably be useful to identify the locks from the DB itself. Below is a nifty little query that does exactly that:
 
-It would probably be useful to identify the locks from the DB itself. Below is a nifty little query that does exactly that:
-
-```sql title="do_locks_exist.sql"
-SELECT EXISTS (
-  SELECT
-    1
-  FROM
-    pg_stat_activity ps
-    JOIN pg_locks pl on ps.pid = pl.pid
-  WHERE
-    pl.relation = 'schema.my_table'::regclass
-    AND NOT pl.granted
-    AND ps.datname = current_database();
-);
-```
+    ```sql title="do_locks_exist.sql"
+    SELECT EXISTS (
+    SELECT
+        1
+    FROM
+        pg_stat_activity ps
+        JOIN pg_locks pl on ps.pid = pl.pid
+    WHERE
+        pl.relation = 'schema.my_table'::regclass
+        AND NOT pl.granted
+        AND ps.datname = current_database();
+    );
+    ```
+</Collapsible>
 
 ## The "Hack"
 
@@ -217,12 +218,13 @@ public class MVRefreshScheduler {
 }
 ```
 
-## Show Me The <em class= "font-serifBold">Real</em> Solution
+## Show Me The <em class = "font-serif">Real</em> Solution
 
 What if I told you there was a way to access the materialized view while it was still being
 refreshed? Postgres allows the `REFRESH MATERIALIZED VIEW [CONCURRENTLY]` option whose sole purpose
 is to allow allow the materialized view to remain accessible for reads during the refresh process.
-The single prerequisite is that the materialized view requires a `UNIQUE` index on it.
+The single prerequisite is that the materialized view requires a `UNIQUE` index on it. You could even
+schedule these refreshes just as we did the standard refresh.
 
 <InfoBox boxText = "Concurrent refreshes will be faster than standard refreshes for a smaller record size but is in general slow since it requires more system resources to maintain consistency."/>
 
@@ -231,5 +233,5 @@ The single prerequisite is that the materialized view requires a `UNIQUE` index 
 PostgreSQL's materialized views can really boost performance in applications that handle a
 lot of data. But to get the most out of them, it's important to use the `REFRESH MATERIALIZED
 VIEW [CONCURRENTLY]` command effectively. Even with automated solutions as described, (1) there
-is still some overhead in maintaining the scheduler job, and (2) there will be some stale data
+is still some overhead in maintaining the scheduler job, and (2) there will be stale data
 between refreshes.

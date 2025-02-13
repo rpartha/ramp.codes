@@ -6,6 +6,6 @@ interface Props {
 const { date } = Astro.props;
 ---
 
-<time datetime={date.toISOString()}>
+<time datetime={date.toISOString()} class="text-subText">
     {date.toISOString().split('T')[0]}
 </time>

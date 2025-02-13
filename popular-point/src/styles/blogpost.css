@@ -1,5 +1,8 @@
-h1 {
-  font-family: "goudy_old_style_pro-bold";
+h1,
+h2,
+h3,
+h4 {
+  font-family: "PP Eiko";
 }
 
 h2 {
@@ -17,9 +20,7 @@ h4 {
 h2,
 h3,
 h4 {
-  color: #000808;
-  font-family: "goudy_old_style_pro-bold";
-  style: bold;
+  color: #777777;
 }
 
 .tbl {
@@ -36,7 +37,7 @@ ol,
 ul {
   color: white;
   list-style: decimal;
-  font-family: __clean-custom;
+  font-family: "PP Mori";
   font-size: 1.125rem;
   line-height: 1.25rem;
   text-align: justify;
@@ -47,7 +48,7 @@ ul {
 
 p {
   color: rgba(0, 33, 33, 1);
-  font-family: __clean-custom;
+  font-family: "PP Mori";
   font-size: 0.875rem;
   line-height: 1.25rem;
   text-align: justify;
@@ -60,9 +61,16 @@ h3,
 h4,
 p:not(li > p),
 img {
-  padding-top: 2%;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+}
+
+img {
+  padding-top: 1.5rem;
+}
+
+p:not(li > p) {
+  padding-top: 1.5%;
 }
 
 li > p {
@@ -70,7 +78,7 @@ li > p {
 }
 
 em {
-  font-family: __clean-custom;
+  font-family: "PP Mori";
 }
 
 .note,
@@ -97,7 +105,6 @@ pre > code {
   display: grid;
   /*  this is way the line will span whole width of `code` component */
   padding: 1.5rem 0;
-  background-color: rgba(11 12 15 1 / var(--tw-bg-opacity));
   /*border-radius: 0.5rem;*/
   overflow: auto;
   font-size: 0.9rem;
@@ -107,10 +114,10 @@ p > code,
 li > code,
 em > code {
   font-size: 0.9rem;
-  color: #002121;
+  color: #000000;
   transform: translateY(0.125rem);
   border-radius: 0.25rem;
-  background-color: #b6cccc;
+  background-color: #dddddd;
   padding-right: 0.2rem;
   padding-left: 0.2rem;
 }

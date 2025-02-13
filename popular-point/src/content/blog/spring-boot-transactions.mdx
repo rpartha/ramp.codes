@@ -5,6 +5,7 @@ pubDate: 'May 17 2024'
 author: Ram
 draft: false
 ---
+import Collapsible from '../../components/Collapsible.astro';
 
 Use today's post as a simple and practical explanation of transactions, and how to handle them using Spring Boot. We'll cover at least the basics.
 
@@ -47,7 +48,7 @@ public class SomeService {
 The above code is a much simplified version of what Spring Boot does under the hood:
 
 <ul
-    class="mt-1 list-decimal pl-12 pr-8 text-justify font-body text-sm leading-snug text-body sublist"
+    class="mt-1 list-decimal pl-12 pr-8 text-justify font-sans text-sm leading-snug text-body sublist"
 >
     <li>Transactions will start upon successful connection to a database. In the case of Enterprise applications, usually a datasource is configured somewhere (e.g. Hashicorp Vault) and connections will be retrieved from that. But you could also just get the connections from a `DriverManager` with the same input parameters.</li>
     <li>Turning off auto-commits does not ensure that every SQL execution occurs in its own transaction. Instead, you'll need to take the wheel and call `commit` yourself as long as the transaction is still open.</li>
@@ -111,7 +112,7 @@ But to truly master the usage of this annotation, you should probably understand
 We can specify different propagation behaviors that determine how transactions are managed between method calls. You can define this behavior using the `propagation` attribute with the following options:
 
 <ul
-    class="mt-1 list-['—_'] pl-12 pr-8 text-justify font-body text-sm leading-snug text-body sublist"
+    class="mt-1 list-['—_'] pl-12 pr-8 text-justify font-sans text-sm leading-snug text-body sublist"
 >
     <li>_`Propagation.REQUIRED`_ is the default behavior which states that the method will either take part in an existing transaction or create a new one if none exists.</li>
     <li>_`Propagation.REQUIRES_NEW`_ will ensure the method _always_ runs in a new transaction, and will suspend any existing transaction.</li>
@@ -127,7 +128,7 @@ We can specify different propagation behaviors that determine how transactions a
 We can also define the transaction isolation level which dictates how concurrent transactions interact with eachother. The `isolation` attribute allows for the following options:
 
 <ul
-    class="mt-1 list-['—_'] pl-12 pr-8 text-justify font-body text-sm leading-snug text-body sublist"
+    class="mt-1 list-['—_'] pl-12 pr-8 text-justify font-sans text-sm leading-snug text-body sublist"
 >
     <li>
       _`DEFAULT`_ will use the default isolation level of the underlying DB.
@@ -212,13 +213,13 @@ public class UserService {
 }
 ```
 
-#### Behind-The-Scenes
+<Collapsible collapseTitle = "Aside: Behind-The-Scenes" customCss = " pl-[1.5rem] pt-4 text-sm">
+    We already know that all this really boils down to is the JDBC code we saw earlier. But what does Spring really do when using `@Transactional`? There's a lot to be said about this which is out of the scope of this post, so I'll cut to the chase. In short, an aspect takes care of creating and maintaining transactions for classes that declare the annotation on itself or its members. At a very high level, this loosely translates to the following:
 
-We already know that all this really boils down to is the JDBC code we saw earlier. But what does Spring really do when using `@Transactional`? There's a lot to be said about this which is out of the scope of this post, so I'll cut to the chase. In short, an aspect takes care of creating and maintaining transactions for classes that declare the annotation on itself or its members. At a very high level, this loosely translates to the following:
+    Spring dynamically creates "invisible" proxies for such classes. Proxies, thanks to Spring containing IoC containers at its core, provide a way for Spring to inject behaviors around method calls of the object being proxied (but not at runtime). That means when _external_ clients attempt to make a call to your object, the calls are intercepted and the behaviors are injected via the _proxy_ object around your _actual_ bean.
 
-Spring dynamically creates "invisible" proxies for such classes. Proxies, thanks to Spring containing IoC containers at its core, provide a way for Spring to inject behaviors around method calls of the object being proxied (but not at runtime). That means when _external_ clients attempt to make a call to your object, the calls are intercepted and the behaviors are injected via the _proxy_ object around your _actual_ bean.
-
-_"But what about self-invoked methods?"_ An important thing to note is that your bean has no knowledge that it is being wrapped in a proxy. So, if it invokes one of its own methods, it will not use the proxy to do so but instead use the `this` reference. Proxies aren't magic - they're really just Spring classes that become "visible" when stepping through the code.
+    _"But what about self-invoked methods?"_ An important thing to note is that your bean has no knowledge that it is being wrapped in a proxy. So, if it invokes one of its own methods, it will not use the proxy to do so but instead use the `this` reference. Proxies aren't magic - they're really just Spring classes that become "visible" when stepping through the code.
+</Collapsible>
 
 ### Programmatic Transaction Management
 
@@ -239,7 +240,7 @@ public class PaymentService {
 We'd be initially inclined to mark the entire method as `@Transactional` and use a single `EntityManager` to atomically perform all operations. But the problem lies within the API call - it could potentically be an expensive call that could deplete our available DB connections. Let's examine what exactly is going on when `initiatePayment(request)` is invoked:
 
 <ul
-    class="mt-1 list-decimal pl-12 pr-8 text-justify font-body text-sm leading-snug text-body sublist"
+    class="mt-1 list-decimal pl-12 pr-8 text-justify font-sans text-sm leading-snug text-body sublist"
 >
     <li>The transactional aspect starts a new transaction using the `EntityManager`. The connection pool now has one less connection.</li>
     <li>Call an external API, but keep the connection from earlier.</li>
@@ -286,7 +287,7 @@ public class PaymentService {
 In this example, we:
 
 <ul
-    class="mt-1 list-['—_'] pl-12 pr-8 text-justify font-body text-sm leading-snug text-body sublist"
+    class="mt-1 list-['—_'] pl-12 pr-8 text-justify font-sans text-sm leading-snug text-body sublist"
 >
     <li>Defined our own transaction with a custom propagation behavior and timeout.</li>
     <li>Performed payment scheduling logic, including authentication and DB persistance.</li>

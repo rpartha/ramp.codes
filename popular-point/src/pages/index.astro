@@ -13,114 +13,113 @@ const posts = (
 ---
 <!doctype html>
 <html lang="en">
-   <head>
-      <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   </head>
-   <body class="custom-bg no-select">
-      <!-- Content Wrapper -->
-      <div class="content flex min-h-screen flex-col justify-center items-center px-4 sm:px-6 lg:px-8">
-         <!-- Card -->
-         <div class="card max-w-screen-md mx-auto rounded-lg px-6 py-8 sm:px-10 sm:py-12">
-            <div class="flex items-center justify-between">
-               <!-- Logo -->
-               <img
-                  src="../logo/rp-logo_line.svg"
-                  alt="Logo"
-                  class="w-10 h-10 object-contain"
-                  />
-               <!-- Search Icon Button -->
-               <!--
-                  <button class="search-btn p-2 text-body hover:text-action transition-colors">
-                      <i class="ri-search-2-line text-2xl"></i>
-                  </button>
-                  -->
+    <head>
+        <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+
+    <body class="custom-bg no-select">
+        <div class="content flex min-h-screen flex-col justify-center items-center px-4 sm:px-6 md:px-8 lg:px-12">
+            <div class="card max-w-4xl w-full mx-auto bg-white rounded-lg overflow-hidden">
+                <div class="p-6 sm:p-8 md:p-10 lg:p-12">
+                    <div class="flex items-center justify-between mb-4">
+                        <img src="/logo/rp-logo_line.svg" alt="Logo" class="w-8 h-8 object-contain" />
+                    </div>
+
+                    <h1 class="font-serif font-medium text-xl text-link mb-4">
+                        Hi there, I'm Ram!
+                    </h1>
+
+                    <p class="text-justify font-sans text-sm leading-snug mb-2">
+                        I'm currently pursuing a <em class="font-serifItalic">Master's in Computer Science</em> with a specialization in
+                        <em class="font-serifItalic"> Artificial Intelligence</em> at UC Boulder while working as a senior full-stack engineer at
+                        DTCC. I'm currently focused on building innovative, back-end heavy solutions within the Spring Boot-Angular stack for our
+                        self-service orchestration framework called SSP to automate various dev team workflows.<br/><br/> Beyond my technical endeavors,
+                        I approach music with ardor, having practiced Tabla for nearly 15 years under the mentorship of Guru Dr. Pratik Devasthale.
+                        This journey culminated in earning a Visharad Purna, equivalent to a Bachelor's in Music. I have also embraced the role of a teacher,
+                        sharing my love for music with students from my home for the past two years.
+                        <br/><br/> Explore my site and connect with me — innovation grows through collaboration!
+                    </p>
+
+                    <div class="relative mb-4 mt-4 translate-x-[0.275rem]">
+                        <i class="ri-poker-diamonds-line absolute top-[-12px] left-[-8px] text-diamond"></i>
+                        <i class="ri-poker-diamonds-line absolute top-[-12px] right-[-8px] text-diamond"></i>
+                        <i class="ri-poker-diamonds-line absolute bottom-[-11px] left-[-8px] text-diamond"></i>
+                        <i class="ri-poker-diamonds-line absolute bottom-[-11px] right-[-8px] text-diamond"></i>
+                        <div class="border-content border border-homeBorder p-5 md:ml-0 md:mr-0">
+                            <div class="grid grid-cols-1 gap-4">
+                                <div class="rounded overflow-hidden">
+                                    <div class="">
+                                        <div class="inline-flex items-center flex-row">
+                                            <i class="text-link ri-map-pin-2-line ri-md mr-1"></i>
+                                            <span class="font-sans text-sm text-header content-center">
+                                                Location<br/>
+                                                <p class="text-subText font-sans text-sm">Chesterfield, NJ</p>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr style="border: none; border-top: 1px solid #c0c0c0;">
+                                <div class="rounded overflow-hidden">
+                                    <div class="">
+                                        <div class="inline-flex items-center flex-row">
+                                            <i class="text-link ri-sparkling-line ri-md mr-1"></i>
+                                            <span class="font-sans text-sm text-header content-center">
+                                                Affiliations<br/>
+                                                <p class="text-subText font-sans text-sm">麦わら大船団/Hufflepuff</p>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr style="border: none; border-top: 1px solid #c0c0c0; ">
+                                <div class="rounded overflow-hidden">
+                                    <div class="">
+                                        <div class="inline-flex items-center flex-row">
+                                            <i class="text-link ri-fire-line ri-md mr-1"></i>
+                                            <span class="font-sans text-sm text-header content-center">
+                                                Passions<br/>
+                                                <p class="text-subText font-sans text-sm">Travel, Hiking, Watches, Figurines</p>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr style="border: none; border-top: 1px solid #c0c0c0; ">
+                                <div class="rounded overflow-hidden">
+                                    <div class="">
+                                        <div class="inline-flex items-center flex-row">
+                                            <i class="text-link ri-book-marked-line ri-md mr-1"></i>
+                                            <span class="font-sans text-sm text-header content-center">
+                                                Last Read<br/>
+                                                <p class="text-subText font-sans text-sm"><i>Salvation of a Saint</i>, Keigo Higashino</p>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-xl text-link font-serif mb-2">Fresh Entries</h2>
+                    <p class="font-sans text-subText text-sm leading-snug mb-4">
+                        I occasionally like to write about stuff.
+                    </p>
+
+                    <section class="group relative mt-4">
+                        <ul class="space-y-4">
+                            {posts.slice(0, 4).map((post) =>
+                            <PostList post={post} customCss="" />)}
+                        </ul>
+                        <a href="/notebook" class="text-action text-sm mt-2 inline-block font-sans">
+                            <span>Notebook</span>
+                            <i class="ri-arrow-right-line"></i>
+                        </a>
+                    </section>
+
+                    <div id="squig" style="--mask: radial-gradient(0.39999999999999997rem at 50% calc(100% + 0.18rem),#0000 calc(99% - 0.1rem),#000 calc(101% - 0.1rem) 99%,#0000 101%) calc(50% - 0.6rem) calc(50% - 0.2rem + .5px)/1.2rem 0.4rem repeat-x,
+                        radial-gradient(0.39999999999999997rem at 50% -0.18rem,#0000 calc(99% - 0.1rem),#000 calc(101% - 0.1rem) 99%,#0000 101%) 50% calc(50% + 0.2rem)/1.2rem 0.4rem repeat-x;"></div>
+                    <Footer customCss=" items-center"/>
+                </div>
             </div>
-            <!-- Name -->
-            <h1 class="font-serifBold mt-4 gradient-text text-3xl">
-               Hi there, I'm Ram!
-            </h1>
-            <!-- About -->
-            <p class="mt-6 text-justify font-body text-sm leading-snug">
-               I'm currently pursuing a <em class="font-serifBoldItalic">Master's in Computer Science</em> with a specialization in
-               <em class="font-serifBoldItalic">Artificial Intelligence</em> at UC Boulder. While my academic focus is on pushing the
-               boundaries of intelligent systems, my professional experience lies in back-end development as a full-stack engineer.
-               I thrive on building scalable systems, designing efficient APIs, and delivering seamless software solutions.<br/><br/>
-               Outside of work, I've been practicing Tabla under the guidance of Dr. Pratik Devasthale for ~15 years. As part of that
-               journey, I've obtained a Visharad Purna (the equivalent of a Bachelors in Music). I began teaching students out of my
-               home for ~2 years now.<br/><br/>
-               Explore my site and connect with me — innovation grows through collaboration!
-            </p>
-
-            <div id="squig" style="--mask: radial-gradient(0.39999999999999997rem at 50% calc(100% + 0.18rem),#0000 calc(99% - 0.1rem),#000 calc(101% - 0.1rem) 99%,#0000 101%) calc(50% - 0.6rem) calc(50% - 0.2rem + .5px)/1.2rem 0.4rem repeat-x,
-                radial-gradient(0.39999999999999997rem at 50% -0.18rem,#0000 calc(99% - 0.1rem),#000 calc(101% - 0.1rem) 99%,#0000 101%) 50% calc(50% + 0.2rem)/1.2rem 0.4rem repeat-x;"></div>
-
-            <!-- Grid Container -->
-            <div class=" grid sm:grid-cols-2 md:grid-cols-3 gap-5">
-               <div class="rounded overflow-hidden shadow-lg ">
-                  <div class="px-6 py-4">
-                     <div class="font-serifBold text-md mb-2">Work</div>
-                     <p class="text-gray-700 font-body text-sm">SDE @ DTCC</p>
-                  </div>
-               </div>
-               <div class=" rounded overflow-hidden shadow-lg">
-                  <div class="px-6 py-4">
-                     <div class="font-serifBold text-md mb-2">Location</div>
-                     <p class="text-gray-700 font-body text-sm">Chesterfield, NJ</p>
-                  </div>
-               </div>
-               <div class=" rounded overflow-hidden shadow-lg">
-                  <div class="px-6 py-4">
-                     <div class="font-serifBold text-md mb-2">Comfort Tech Stack</div>
-                     <p class="text-gray-700 font-body text-sm">Spring Boot, Angular</p>
-                  </div>
-               </div>
-               <div class=" rounded overflow-hidden shadow-lg">
-                  <div class="px-6 py-4">
-                     <div class="font-serifBold text-md mb-2">Affiliations</div>
-                     <p class="text-gray-700 font-body text-sm">麦わら大船団/Hufflepuff<br/>Ovo-lacto Vegetarian</p>
-                  </div>
-               </div>
-               <div class=" rounded overflow-hidden shadow-lg">
-                  <div class="px-6 py-4">
-                     <div class="font-serifBold text-md mb-2">Passions</div>
-                     <p class="text-gray-700 font-body text-sm">Travel, Hiking, Watches, Figurines</p>
-                  </div>
-               </div>
-               <div class="rounded overflow-hidden shadow-lg">
-                  <div class="px-6 py-4">
-                     <div class="font-serifBold text-md mb-2">Last Read</div>
-                     <p class="text-gray-700 font-body text-sm"><i>Salvation of a Saint</i>, Keigo Higashino</p>
-                  </div>
-               </div>
-            </div>
-
-            <div id="squig" style="--mask: radial-gradient(0.39999999999999997rem at 50% calc(100% + 0.18rem),#0000 calc(99% - 0.1rem),#000 calc(101% - 0.1rem) 99%,#0000 101%) calc(50% - 0.6rem) calc(50% - 0.2rem + .5px)/1.2rem 0.4rem repeat-x,
-                radial-gradient(0.39999999999999997rem at 50% -0.18rem,#0000 calc(99% - 0.1rem),#000 calc(101% - 0.1rem) 99%,#0000 101%) 50% calc(50% + 0.2rem)/1.2rem 0.4rem repeat-x;"></div>
-
-
-            <!-- Fresh Entries -->
-            <h2 class="text-header  text-lg font-serifBold">Fresh Entries</h2>
-            <p class="mt-2 font-body text-sm leading-snug">
-               I occasionally like to write about stuff.
-            </p>
-            <section class="group relative mt-4">
-               <ul class="space-y-4">
-                  {
-                    posts.slice(0, 4).map((post) => (<PostList post={post} customCss=""/>))
-                  }
-               </ul>
-               <a href="/notebook" class="text-action text-sm mt-2 inline-block font-body">
-               <span>Notebook</span>
-               <i class="ri-arrow-right-line"></i>
-               </a>
-            </section>
-
-            <div id="squig" style="--mask: radial-gradient(0.39999999999999997rem at 50% calc(100% + 0.18rem),#0000 calc(99% - 0.1rem),#000 calc(101% - 0.1rem) 99%,#0000 101%) calc(50% - 0.6rem) calc(50% - 0.2rem + .5px)/1.2rem 0.4rem repeat-x,
-                radial-gradient(0.39999999999999997rem at 50% -0.18rem,#0000 calc(99% - 0.1rem),#000 calc(101% - 0.1rem) 99%,#0000 101%) 50% calc(50% + 0.2rem)/1.2rem 0.4rem repeat-x;"></div>
-
-            <Footer customCss=" items-center" />
-         </div>
-      </div>
-   </body>
+        </div>
+    </body>
 </html>

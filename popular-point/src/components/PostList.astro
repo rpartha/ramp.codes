@@ -14,13 +14,13 @@ const { post, customCss } = Astro.props;
 <li class={`mb-2${customCss}`}>
    <a
       href={`/notebook/${post.slug}/`}
-      class="block text-md font-serifBold hover:underline"
+      class="block text-sm font-sans text-black underline"
       >
    {post.data.title}
    </a>
-   <div class="date text-subText font-mono text-xs">
+   <div class="date font-sans text-xs">
       <span>
-         <i class="ri-calendar-line"></i>
+         <i class="text-link ri-calendar-line"></i>
          <FormattedDate date={post.data.pubDate} />
          ·
          <ReadingTime post={post} />

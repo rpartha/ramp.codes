@@ -1,0 +1,12 @@
+---
+interface Props {
+  collapseTitle: String;
+  customCss: String;
+}
+const { collapseTitle, customCss } = Astro.props;
+---
+
+<details>
+  <summary class = `font-serif text-subText${customCss}`>{collapseTitle}</summary>
+  <slot/>
+</details>

@@ -27,19 +27,19 @@ const posts = (
                 <div class="card max-w-screen-md mx-auto rounded-lg px-6 py-8 sm:px-10 sm:py-12 bg-opacity-90 bg-gray-800">
                     <!-- Back Link -->
                     <div class="flex items-center mb-1">
-                        <a href="/" class="text-teal text-2xl mr-2">
+                        <a href="/" class="text-link text-2xl mr-2">
                             <i class="ri-arrow-left-line"></i>
                         </a>
-                        <span class="font-serifBold text-3xl">
+                        <span class="font-serif text-link text-3xl">
                             Notebook
                         </span>
                     </div>
                     <!-- Description -->
-                    <h4 class="text-subText px-8 mb-2 font-body text-sm leading-snug">
+                    <h4 class="text-subText px-8 mb-2 font-sans text-sm leading-snug">
                         A place to share thoughts and ideas.
                     </h4>
                     <!-- Posts Section -->
-                    <section class="group relative px-4">
+                    <section class="group relative py-2 px-4">
                         <ul class="space-y-4">
                             {
                               posts.map((post) => (<PostList post={post} customCss=" ml-4"/>))
@@ -51,7 +51,7 @@ const posts = (
                         radial-gradient(0.39999999999999997rem at 50% -0.18rem,#0000 calc(99% - 0.1rem),#000 calc(101% - 0.1rem) 99%,#0000 101%) 50% calc(50% + 0.2rem)/1.2rem 0.4rem repeat-x;"></div>
 
                     <!-- Footer -->
-                    <Footer customCss="mt-8" />
+                    <Footer customCss=" items-center" />
                 </div>
             </div>
         </div>
