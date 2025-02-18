@@ -1,0 +1,29 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import FormattedDate from './FormattedDate.astro';
+import ReadingTime from './ReadingTime.astro';
+
+interface Props {
+    post: CollectionEntry<'blog'>;
+    customCss?: String;
+}
+
+const { post, customCss } = Astro.props;
+---
+
+<li class={`mb-2${customCss ? customCss : ''}`}>
+   <a
+      href={`/notebook/${post.slug}/`}
+      class="block text-sm font-sans text-black underline"
+      >
+   {post.data.title}
+   </a>
+   <div class="date font-sans text-xs">
+      <span>
+         <i class="text-link ri-calendar-line"></i>
+         <FormattedDate date={post.data.pubDate} />
+         ·
+         <ReadingTime post={post} />
+      </span>
+   </div>
+</li>

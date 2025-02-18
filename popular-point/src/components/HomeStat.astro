@@ -1,0 +1,22 @@
+---
+interface Props {
+    icon: String;
+    stat: String;
+    descr: String;
+    customCss?: String;
+}
+
+const { icon, stat, descr, customCss } = Astro.props;
+---
+
+<div class={`rounded overflow-hidden ${customCss}`}>
+    <div class="">
+        <div class="inline-flex items-center flex-row">
+            <i class={`text-link ${icon} ri-md mr-1`}></i>
+            <span class="font-sans text-sm text-header content-center">
+                {stat}<br/>
+                <p class="text-subText font-sans text-sm" set:html={descr}></p>
+            </span>
+        </div>
+    </div>
+</div>

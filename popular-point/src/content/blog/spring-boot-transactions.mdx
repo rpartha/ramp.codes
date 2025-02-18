@@ -1,0 +1,479 @@
+---
+title: 'Spring Boot Transactions'
+description: 'Everything You Need to Know About Spring Boot Transactions'
+pubDate: 'May 17 2024'
+updatedDate: 'Feb 17 2025'
+author: Ram
+draft: false
+---
+import Collapsible from '../../components/Collapsible.astro';
+import UpdateBox from '../../components/UpdateBox.astro';
+
+<UpdateBox boxText="Updated to talk about what is a TransactionTemplate and how do we use one."/>
+
+Use today's post as a simple and practical explanation of transactions, and how to handle them using Spring Boot. We'll cover at least the basics.
+
+## What in The Heck Are Transactions?
+
+Transactions are a fundamental concept in database management systems (DBMS). They ensure that a series of database operations are treated as a single unit of work. This means that either all of the operations in the transaction succeed, or none of them do. This is important for maintaining the Atomicity, Consistency, Isolation, and Durability (ACID) principles. Without transactions, a partial failure could leave your data in an inconsistent state.
+
+## Good Old JDBC
+
+Wait! I thought we were learning about Spring Boot's Transaction Management? Yes, we are, but some background knowledge is required before we get there. Java Database Connectivity (JDBC) is a standard specification of an API that allows Java-based applications to access the DBMS. As long as a driver exists for that particular DBMS, anyone can use the API to develop applications that connect to any database in a vendor-agnostic manner, perform structured operations, and process the result of those operations. In theory, any available database library or repository can be used to "manage" database transactions. Take a look at the sample code below:
+
+```java title="SomeService.java" {10, 14, 19, 22}#point
+public class SomeService {
+  private static final Logger log = Logger.getLogger(SomeService.class);
+
+  // Don't store creds in plain-text like this
+  private static final URL = "my:connection:url";
+  private static final USER = "username";
+  private static final PASS = "password";
+
+  public static void doSomething() {
+    Connection conn = dataSource.getConnection(URL, USER, PASS);
+    String query = "update my_table set f3 = 'data' where f1 = ? and f2 = ?";
+
+    try (conn) {
+      conn.setAutoCommit(false);
+      PreparedStatement ps = conn.prepareStatement(query);
+      ps.setString(1, "value 1");
+      ps.setString(2, "value 2");
+      ps.executeUpdate();
+      conn.commit();
+    } catch (Exception e) {
+      log.error("Something went wrong...", e);
+      conn.rollback();
+    }
+  }
+}
+```
+
+The above code is a much simplified version of what Spring Boot does under the hood:
+
+<ul
+    class="mt-1 list-decimal pl-12 pr-8 text-justify font-sans text-sm leading-snug text-body sublist"
+>
+    <li>Transactions will start upon successful connection to a database. In the case of Enterprise applications, usually a datasource is configured somewhere (e.g. Hashicorp Vault) and connections will be retrieved from that. But you could also just get the connections from a `DriverManager` with the same input parameters.</li>
+    <li>Turning off auto-commits does not ensure that every SQL execution occurs in its own transaction. Instead, you'll need to take the wheel and call `commit` yourself as long as the transaction is still open.</li>
+    <li> Now it's time to `commit` our transaction — in this case, an update.</li>
+    <li>Whoops! We got an `Exception` and now have to rollback the transction...</li>
+</ul>
+
+## Transaction Management in Spring Boot
+
+At this point, you should have a good understanding of JDBC transactions. Let's shift our focus to what actually is Spring's transaction abstraction framework, how we can use that framework to manage transactions, and what happens interally within Spring (Boot). "Transaction management" in this context simply refers to how exactly does Spring start, commit, and rollback JDBC transactions. Thankfully, Spring offers you many different, more convenient ways to achieve that compared to our previous basic JDBC approach.
+
+### Declarative Transaction Management
+
+Spring’s `@Transactional` annotation provides a nice declarative API to simplify transaction management. We can annotate any bean at either the class or method level to indicate that the annotated code should be executed within a transaction. Basically, Spring will automatically create a transaction around the annotated code and manage the transaction lifecycle.
+
+So how can we use this shiny modern approach? It's actually fairly simple. Before we do anything, we have to configure transactions. This happens by default in Spring Boot projects that have `spring-data-*` or `spring-tx` dependencies. To manually configure, just add the `@EnableTransactionManagement` annotation to your class annotated with `@Configuration`.
+
+```java title="DatabaseConfig.java" {2}#addWithSpace, {1,3}#space, {5-10}#add
+@Configuration
+@EnableTransactionManagement
+public class DatabaseConfig {
+
+  @Bean
+  public PlatformTransactionManager transactionManager() {
+    JpaTransactionManager transactionManager = new JpaTransactionManager();
+    transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+    return transactionManager;
+  }
+}
+```
+
+You'll notice I also added a bean for `PlatformTransactionManager`. Reason being, when your service is proxied, that proxy delegates the transactional state work (e.g. open, commit, close transaction) to a transaction manager. It's also good to specify a single centralized transaction manager for Spring to wire to. More on this later.
+
+Let's examine what a modern implementation of transaction management would look like:
+
+```java title="UserService.java"
+@Service
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Transactional
+    public void createUser(UserRequest userRequest) {
+        UserEntity user = new UserEntity();
+        user.setFirstName(userRequest.getFirstName());
+        user.setLastName(userRequest.getLastName());
+        user.setEmail(userRequest.getEmail());
+        ...
+        userRepository.save(user);
+    }
+}
+```
+
+In this example, the `save()` method of the `UserRepository` occurs within a transaction. If that operation fails, Spring will automatically rollback the transaction, ensuring data consistency. You can see this really is a no-fuss way of letting Spring manage your transactions on your behalf. This dramatically simplifies your code and reduces the chances of bugs related to transaction handling.
+
+But to truly master the usage of this annotation, you should probably understand the different properties that it has to offer: `propagation`, `isolation`, `timeout`, `readOnly`, `rollbackFor`, and `noRollbackFor`. Let's take a quick gander at what these mean.
+
+#### Propagation
+
+We can specify different propagation behaviors that determine how transactions are managed between method calls. You can define this behavior using the `propagation` attribute with the following options:
+
+<ul
+    class="mt-1 list-['—_'] pl-12 pr-8 text-justify font-sans text-sm leading-snug text-body sublist"
+>
+    <li>_`Propagation.REQUIRED`_ is the default behavior which states that the method will either take part in an existing transaction or create a new one if none exists.</li>
+    <li>_`Propagation.REQUIRES_NEW`_ will ensure the method _always_ runs in a new transaction, and will suspend any existing transaction.</li>
+    <li>_`Propagation.SUPPORTS`_ allows the method to run only in an existing transaction that is available, otherwise it will run without a transaction.</li>
+    <li>_`Propagation.NOT_SUPPORTED`_ will ensure the method _never_ runs in a transaction, and will suspend any existing transaction.</li>
+    <li>_`Propagation.MANDATORY`_  will throw an exception if no transactions are found, but is otherwise the same as `Propagation.REQUIRED`.</li>
+    <li>_`Propagation.NEVER`_ will throw an exception if an existing transaction is found, but is otherwise the same as `Propagation.NOT_SUPPORTED`. </li>
+    <li>_`Propagation.NESTED`_ will allow the method to run in a nested transaction if there is any existing transaction, otherwise it will run in a new transaction.</li>
+</ul>
+
+#### Isolation
+
+We can also define the transaction isolation level which dictates how concurrent transactions interact with eachother. The `isolation` attribute allows for the following options:
+
+<ul
+    class="mt-1 list-['—_'] pl-12 pr-8 text-justify font-sans text-sm leading-snug text-body sublist"
+>
+    <li>
+      _`DEFAULT`_ will use the default isolation level of the underlying DB.
+    </li>
+
+    <li>
+      _`READ_UNCOMMITTED`_ is the lowest isolation level, and allows for the most concurrent access. Transactions with this isolation reads uncommitted data of other concurrent transactions along with both non-repeatable and phantom reads. Therefore, subsequent reads or query executions may yield different results. _Some DBs may not allow or support this behavior, while others may provide a fallback._
+    </li>
+    <li>
+      _`READ_COMMITTED`_, the second isolation level, will only prevent dirty reads. That means non-repeatable and phantom reads can still happen. So if a transaction has committed it's changes, the result could be changed in subsequent executions, regardless of uncommitted changes.
+    </li>
+    <li>
+      _`REPEATABLE_READ`_, the third isolation level, allows phantom reads only, but will prevent non-repeatable and dirty reads. So once again, uncommitted changes or row re-queries will not have any impact, but queries with range can result in added or removed rows. Simultaenous access to a row is denied, so two or more concurrent transactions can't read and update the same row. _Some DBs may not support this, while others prefer it as default._
+    </li>
+    <li>
+      _`SERIALIZABLE`_ provides the highest level of isolation by preventing _all_ before mentioned concurency side effects. This comes at the cost of the lowest concurrent access rate due to the sequential execution of the concurrent calls.
+    </li>
+
+</ul>
+
+#### Timeout and Read Only
+
+We can set a `timeout` - the max number of seconds that a transaction is allowed to take before it gets rolled back - for any operation wrapped by a transaction. Let’s set a three-second timeout with the repeatable read transaction isolation level:
+
+```java title=" "
+@Transactional(isolation = Isolation.REPETABLE_READ, timeout = 3)
+```
+
+Additionally, if we want to, we can mark a transaction as `readOnly`. This is useful when you want the transaction manager to optimize read operations, but may cause unexpected behavior for write operations. For example, let's code a method to retrieve all users:
+
+```java title="UserService.java" {10}#add
+@Service
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private EntityManager entityManager;
+
+   @Transactional(readOnly = true)
+    public UserResponse getAllUsers(String sort, String filter) {
+        List<UserEntity> users = entityManager.createQuery(
+          String.format("Select T from UserEntity T where %s order by %s", filter, sort),
+          UserEntity.class
+        ).getResultList();
+
+        List<User> content = modelMapper.convertUserEntityToUserModelList(users);
+
+        return new UserResponse(content);
+    }
+}
+```
+
+#### Rollback
+
+Lastly, Spring gives the benefit of automatic rollbacks. Whenever a runtime exception is encountered, Spring will automatically rollback the transaction by default. However, we can kick it up a notch and customize the rollback behavior. Using the `rollbackFor` and `noRollbackFor` attributes, we can specify a list of exceptions for which the transaction should or should not be rolled back. Let's revist the user creation, and apply these attributes:
+
+```java title="UserService.java" {7,9,10,12-14}#add
+@Service
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Transactional(rollbackFor = Exception.class, noRollbackFor = CustomException.class)
+    public void createUser(UserRequest userRequest) {
+        validateUser(userRequest);
+        UserEntity existingUser = userRepository.findByEmail(userEntity.getEmail());
+
+        if (!Objects.isNull(existingUser)) {
+          throw new CustomException(String.format("User with email %s already exists in system", userRequest.getEmail());
+        }
+
+        UserEntity user = new UserEntity();
+        user.setFirstName(userRequest.getFirstName());
+        user.setLastName(userRequest.getLastName());
+        user.setEmail(userRequest.getEmail());
+        ...
+        userRepository.save(user);
+    }
+}
+```
+
+<Collapsible collapseTitle="Aside: Behind-The-Scenes" customCss=" pl-[1.5rem] pt-4 text-sm">
+    We already know that all this really boils down to is the JDBC code we saw earlier. But what does Spring really do when using `@Transactional`? There's a lot to be said about this which is out of the scope of this post, so I'll cut to the chase. In short, an aspect takes care of creating and maintaining transactions for classes that declare the annotation on itself or its members. At a very high level, this loosely translates to the following:
+
+    Spring dynamically creates "invisible" proxies for such classes. Proxies, thanks to Spring containing IoC containers at its core, provide a way for Spring to inject behaviors around method calls of the object being proxied (but not at runtime). That means when _external_ clients attempt to make a call to your object, the calls are intercepted and the behaviors are injected via the _proxy_ object around your _actual_ bean.
+
+    _"But what about self-invoked methods?"_ An important thing to note is that your bean has no knowledge that it is being wrapped in a proxy. So, if it invokes one of its own methods, it will not use the proxy to do so but instead use the `this` reference. Proxies aren't magic - they're really just Spring classes that become "visible" when stepping through the code.
+</Collapsible>
+
+### Programmatic Transaction Management
+
+We've seen how useful Spring can be in terms of automatic transaciton management. But in certain situations, we may want to take advantage of the flexibility that programmatic transaction management offers and manage the transaction ourselves. Imagine a typical scenario in a backend flow: you have some DB operations such as save or update, and you throw an API call in the mix, similar to the sample code below:
+
+```java title="PaymentService.java"
+public class PaymentService {
+  ...
+  public void schedulePayment(PaymentRequest request) {
+    saveOrderRequest(request);
+    authenticateWithPaymentProvider(request.getPaymentDetails());
+    updateOrderStatus();
+    ...
+  }
+}
+```
+
+We'd be initially inclined to mark the entire method as `@Transactional` and use a single `EntityManager` to atomically perform all operations. But the problem lies within the API call - it could potentically be an expensive call that could deplete our available DB connections. Let's examine what exactly is going on when `initiatePayment(request)` is invoked:
+
+<ul
+    class="mt-1 list-decimal pl-12 pr-8 text-justify font-sans text-sm leading-snug text-body sublist"
+>
+    <li>The transactional aspect starts a new transaction using the `EntityManager`. The connection pool now has one less connection.</li>
+    <li>Call an external API, but keep the connection from earlier.</li>
+    <li> Use the same connection to perform remaining DB operations.</li>
+</ul>
+
+In a highly-used system where multiple users make this call at once, every connection would have to wait for a response from the API call. Hence, there is a possibility that there would be no more connections left to borrow from our connection pool. This is where Spring's APIs come in handy to manually manage transactions.
+
+#### Platform Transaction Manager
+
+This is the lowest-level API that Spring has to offer. The `PlatformTransactionManager` is responsible for managing
+the underlying transaction infrastructure, such as the database connection or the JMS session. The cool part about this
+is that a single instance can support multiple tranaction definitions. Earlier, I showed you how to define the bean for it.
+Now let's see how we can define some transactions and use it:
+
+```java title="PaymentService.java" {2-3,12-13,16,22,24-25}#add
+public class PaymentService {
+  @Autowired
+  private final PlatformTransactionManager transactionManager;
+
+  @Autowired
+  private final AuthService authService;
+
+  @Autowired
+  private final PaymentRepository paymentRepository;
+
+  public void schedulePayment(PaymentRequest request) {
+    DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
+    definition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+    definition.setTimeout(3);
+
+    TransactionStatus status = transactionManager.getTransaction(definition);
+
+    try {
+        authService.authenticateWithPaymentProvider(request.getPaymentDetails());
+        Payment payment = new Payment();
+        paymentRepository.save(payment);
+        transactionManager.commit(status);
+    } catch (Exception ex) {
+        transactionManager.rollback(status);
+        log.error("Some exception happaned", ex);
+    }
+  }
+}
+```
+
+First, we need to open up a `DefaultTransactionDefinition`. This is used to create a new transaction or to join an existing transaction.
+It provides a way to configure the transaction attributes, such as _Propagation behavior_, _Isolation level_, _Timeout_, and _Read-Only_. When you use a `PlatformTransactionManager`
+without a `DefaultTransactionDefinition`, the transaction manager will use the default transaction attributes, which may not be suitable for your application.
+
+When you start a transaction using a `PlatformTransactionManager`, you get a `TransactionStatus` object that represents the current transaction.
+You can use this object to manage the transaction, including commiting rolling back and checking the status of a transaction. This allows you to
+manage the transaction lifecycle and ensure that the transaction is properly committed or rolled back.
+
+In this example, we:
+
+<ul
+    class="mt-1 list-['—_'] pl-12 pr-8 text-justify font-sans text-sm leading-snug text-body sublist"
+>
+    <li>Defined our own transaction with a custom propagation behavior and timeout.</li>
+    <li>Performed payment scheduling logic, including authentication and DB persistance.</li>
+    <li>Manually committed the transaction.</li>
+    <li>Rolled back the transaction in case of error, and logged the exception.</li>
+</ul>
+
+#### Using TransactionTemplate
+
+`TransactionTemplate` is a higher-level abstraction that builds on on top of `PlatformTransactionManager` to create, commit, and rollback transactions.
+Think of it as a wrapper that provides a simpler and more convenient way to manage transactions. First, we need to define our `TransactionTemplate` either
+globally as a bean as shown below:
+
+```java title="TransactionConfig.java" {1-11}#add
+  @Configuration
+  public class TransactionConfig {
+    @Bean
+    public TransactionTemplate transactionTemplate(PlatformTransactionManager transactionManager) {
+      TransactionTemplate transactionTemplate = new TransactionTemplate();
+      transactionTemplate.setTransactionManager(transactionManager);
+      transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+      transactionTemplate.setTimeout(3);
+      return transactionTemplate;
+    }
+  }
+```
+
+Next, we can see it in action using our previous example:
+
+```java title="PaymentService.java" {5,6,15-17,32,33}#add, {3,4,17-23}#remove
+public class PaymentService {
+
+  @Autowired
+  private final PlatformTransactionManager transactionManager;
+  @Autowired
+  private TransactionTemplate transactionTemplate;
+
+  @Autowired
+  private AuthService authService;
+
+  @Autowired
+  private PaymentRepository paymentRepository;
+
+  public void schedulePayment(PaymentRequest request) {
+    transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+      @Override
+      protected void doInTransactionWithoutResult(TransactionStatus status) {
+        DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
+        definition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        definition.setTimeout(3);
+
+        TransactionStatus status = transactionManager.getTransaction(definition);
+
+        try {
+          authService.authenticateWithPaymentProvider(request.getPaymentDetails());
+          Payment payment = new Payment();
+          paymentRepository.save(payment);
+        } catch (Exception ex) {
+          status.setRollbackOnly();
+          log.error("Some exception happened", ex);
+        }
+      }
+    });
+  }
+}
+```
+
+In our `PaymentService` class, we're using the `TransactionTemplate` to wrap a block of code that performs the payment transaction. By doing so,
+we're ensuring that either all the operations within that block are successfully committed to the database, or none of them are. This approach
+helps maintain data consistency and prevents partial updates that could leave our data in an inconsistent state.
+
+The beauty of using the `TransactionTemplate` lies in its ability to simplify our transaction management code. We don't have to worry about manually
+managing the transaction lifecycle, which can be error-prone and tedious. By decoupling the transaction management logic from the business logic, we're
+making our code more modular and easier to maintain. This means that if we need to change our transaction management strategy in the future, we can do so
+without affecting the rest of our codebase. It's a win-win situation - our code is more robust, and we're able to develop and maintain it with greater ease.
+
+
+<Collapsible collapseTitle="Note: Local TransactionTemplates" customCss=" pl-[1.5rem] pt-4 text-sm">
+  Instead of defining as a bean, you could define the `TransactionTemplate` in a factory class:
+
+  ```java title="TransactionTemplateFactory.java" {1-9}#add
+    @Component
+    public class TransactionTemplateFactory {
+      public TransactionTemplate createTransactionTemplate(PlatformTransactionManager transactionManager, int timeout, int propagationBehavior) {
+        TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
+        transactionTemplate.setPropagationBehavior(propagationBehavior);
+        transactionTemplate.setTimeout(timeout);
+        return transactionTemplate;
+      }
+    }
+```
+
+Then, you just need to autowire it in your business class and customize the behavior as required:
+
+```java title="PaymentService.class" {8-9,12}#add
+public class PaymentService {
+  @Autowired
+  private AuthService authService;
+
+  @Autowired
+  private PaymentRepository paymentRepository;
+
+  @Autowired
+  private TransactionTemplateFactory transactionTemplateFactory;
+
+  public void schedulePayment(PaymentRequest request) {
+    TransactionTemplate transactionTemplate = transactionTemplateFactory.createTransactionTemplate(3, TransactionDefinition.PROPAGATION_REQUIRED);
+
+    transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+      @Override
+      protected void doInTransactionWithoutResult(TransactionStatus status) {
+        try {
+          authService.authenticateWithPaymentProvider(request.getPaymentDetails());
+          Payment payment = new Payment();
+          paymentRepository.save(payment);
+        } catch (Exception ex) {
+          status.setRollbackOnly();
+          log.error("Some exception happened", ex);
+        }
+      }
+    });
+  }
+}
+```
+
+Keep in mind the propagation behavior does not need to be explicitly set. By default, the `TransactionTemplate` uses a propagation behavior
+of `PROPAGATION_REQUIRED`, which means that a new transaction will be created if one does not already exist, and the existing transaction
+will be used if one already exists.
+
+This approach allows you to decouple the transaction template configuration from the business logic, and makes it easier to customize
+the transaction template for different scenarios.
+
+</Collapsible>
+
+<Collapsible collapseTitle="Aside: What's Right for Me?" customCss=" pl-[1.5rem] pt-4 text-sm">
+    Here's a quick summary on when to use which transaction management approach:
+
+    <div class="tbl overflow-x-auto">
+      <table class="border-collapse border border-gray-200 text-white">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="px-4 py-2 border border-gray-300 text-left font-bold text-sm">Approach</th>
+            <th class="px-4 py-2 border border-gray-300 text-left font-bold text-sm">Type</th>
+            <th class="px-4 py-2 border border-gray-300 text-left font-bold text-sm">Control Level</th>
+            <th class="px-4 py-2 border border-gray-300 text-left font-bold text-sm">Abstraction Level</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="px-4 py-2 border border-gray-300 text-sm">`@Transactional`</td>
+            <td class="px-4 py-2 border border-gray-300 text-sm">Declarative</td>
+            <td class="px-4 py-2 border border-gray-300 text-sm">Less control</td>
+            <td class="px-4 py-2 border border-gray-300 text-sm">High-level</td>
+          </tr>
+          <tr class="bg-gray-50">
+            <td class="px-4 py-2 border border-gray-300 text-sm">TransactionTemplate</td>
+            <td class="px-4 py-2 border border-gray-300 text-sm">Programmatic</td>
+            <td class="px-4 py-2 border border-gray-300 text-sm">More control</td>
+            <td class="px-4 py-2 border border-gray-300 text-sm">High-level</td>
+          </tr>
+          <tr>
+            <td class="px-4 py-2 border border-gray-300 text-sm">PlatformTransactionManager</td>
+            <td class="px-4 py-2 border border-gray-300 text-sm">Programmatic</td>
+            <td class="px-4 py-2 border border-gray-300 text-sm">Manual config required</td>
+            <td class="px-4 py-2 border border-gray-300 text-sm">Low-level</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</Collapsible>
+
+## Remarks
+
+At this point, you should have a solid _overview_ of how transaction management works regardless of the framework. As long as you understand the fundementals, you should be able to navigate and master your enterprise application(s)!

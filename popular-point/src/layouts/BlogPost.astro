@@ -1,0 +1,145 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import BaseHead from '../components/BaseHead.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/blogpost.css';
+
+type Props = CollectionEntry<'blog'>['data'];
+const { title, description, pubDate, updatedDate, author } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <BaseHead title={title} description={description} />
+
+        <script>
+            let copyButtonIcon =
+                '<i class="ri-file-copy-line ri-xl text-copy flex max-sm:hidden"></i>';
+            let codeBlocks = Array.from(document.querySelectorAll('pre'));
+            let figCaptions = Array.from(
+                document.querySelectorAll('figcaption'),
+            );
+            let headers = Array.from(document.querySelectorAll('h1, h2, h3, h4'));
+            let progressBar = document.getElementById('progress-bar');
+
+            // Dynamically color the headers
+            headers.forEach(header => {
+              if (header.tagName.toLowerCase() !== 'h1') {
+                header.classList.add('pt-6', 'olg:pt-5');
+              }
+            });
+
+            for (let [index, codeBlock] of codeBlocks.entries()) {
+                let figCaption = figCaptions.at(index);
+
+                let wrapper = document.createElement('div');
+                wrapper.style.position = 'relative';
+
+                let copyButton = document.createElement('button');
+                copyButton.className = 'copy-code';
+                copyButton.innerHTML = copyButtonIcon;
+
+                if (figCaption !== undefined) {
+                  figCaption.setAttribute('tabindex', '0');
+                  figCaption.appendChild(copyButton);
+
+                  // wrap codebock with relative parent element
+                  codeBlock?.parentNode?.insertBefore(wrapper, figCaption);
+                  wrapper.appendChild(figCaption);
+                }
+
+                copyButton.addEventListener('click', async () => {
+                    await copyCode(codeBlock, copyButton);
+                });
+            }
+
+            async function copyCode(block:any, button:any) {
+                let code = block.querySelector('code');
+                let text = code.innerText;
+
+                await navigator.clipboard.writeText(text);
+
+                button.innerText = 'Code Copied!';
+
+                if (button.innerText === 'Code Copied!') {
+                    button.style.paddingTop = '0.3rem';
+                }
+
+                setTimeout(() => {
+                    button.innerHTML = copyButtonIcon;
+                    if (button.innerHTML === copyButtonIcon) {
+                        button.style.paddingTop = '0.5rem';
+                    }
+                }, 700);
+            }
+
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY; // Amount scrolled from the top
+                const windowHeight = document.documentElement.scrollHeight - window.innerHeight; // Total scrollable height
+                const scrollPercent = (scrollTop / windowHeight) * 100; // Calculate scroll percentage
+                if (progressBar) {
+                  progressBar.style.width = scrollPercent + '%'; // Update progress bar width
+                }
+            });
+        </script>
+    </head>
+
+    <body class="custom-bg no-select">
+        <div id="progress-bar" class="fixed top-0 left-0 h-1 bg-link w-0 transition-all duration-100 ease-in-out z-50"></div>
+        <div class="flex min-h-screen items-center justify-center px-4 sm:px-6 lg:px-8">
+        <!-- Card or contents that should be centered -->
+        <div class="max-w-prose w-full py-12">
+                <div class="">
+                    <div class="">
+                        <a href="/notebook"><i
+                                class="ri-arrow-left-line text-body ri-xl back"
+                            ></i>
+                        </a>
+                        <h1 class="font-serif mt-1 text-link">
+                            <span class="text-xl">{title}</span>
+                        </h1>
+                    </div>
+                    <div class="text-subText text-sm stats px-7 font-sans">
+                        <span
+                            ><i class="ri-calendar-line text-link"></i>
+                            <FormattedDate date={pubDate} />
+                        </span>
+                        <span class = "text-black">·</span>
+                        <span>
+                            {
+                                author && author.includes(',') && (
+                                    <i class="ri-group-line text-link"></i>
+                                )
+                            }
+                            {
+                                author && !author.includes(',') && (
+                                    <i class="ri-user-line text-link"></i>
+                                )
+                            }
+                            {author}
+                        </span>
+                    </div>
+
+                    {
+                        updatedDate && (
+                            <div class="text-subText text-md stats updated  px-7 font-mono capitalize">
+                                <i class="ri-history-line text-link" />
+                                <span>
+                                    Modified:
+                                    <FormattedDate date={updatedDate} />
+                                </span>
+                            </div>
+                        )
+                    }
+                </div>
+                <slot />
+                <div id="squig" style="--mask: radial-gradient(0.39999999999999997rem at 50% calc(100% + 0.18rem),#0000 calc(99% - 0.1rem),#000 calc(101% - 0.1rem) 99%,#0000 101%) calc(50% - 0.6rem) calc(50% - 0.2rem + .5px)/1.2rem 0.4rem repeat-x,
+                    radial-gradient(0.39999999999999997rem at 50% -0.18rem,#0000 calc(99% - 0.1rem),#000 calc(101% - 0.1rem) 99%,#0000 101%) 50% calc(50% + 0.2rem)/1.2rem 0.4rem repeat-x;margin-left:1.5rem;width:calc(100% - 3rem);"></div>
+                <Footer customCss=" items-center blog-footer" />
+            </div>
+        </div>
+    </body>
+</html>
