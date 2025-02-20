@@ -187,6 +187,11 @@ public class UserService {
 }
 ```
 
+When a transaction is marked as `readOnly = true`, it can help the underlying persistence provider (like Hibernate)
+and/or the DBMS optimize the transaction. For example, it may avoid certain locking mechanisms that are typically used
+for write operations. In the context of DBMS, some systems may even use different isolation levels or avoid logging changes.
+Both can lead to better performance for read-heavy operations.
+
 #### Rollback
 
 Lastly, Spring gives the benefit of automatic rollbacks. Whenever a runtime exception is encountered, Spring will automatically rollback the transaction by default. However, we can kick it up a notch and customize the rollback behavior. Using the `rollbackFor` and `noRollbackFor` attributes, we can specify a list of exceptions for which the transaction should or should not be rolled back. Let's revist the user creation, and apply these attributes:

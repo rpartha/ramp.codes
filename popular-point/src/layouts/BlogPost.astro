@@ -125,9 +125,9 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
 
                     {
                         updatedDate && (
-                            <div class="text-subText text-md stats updated  px-7 font-mono capitalize">
+                            <div class="text-subText text-sm stats updated px-7 font-sans capitalize">
                                 <i class="ri-history-line text-link" />
-                                <span>
+                                <span class = "italic">
                                     Modified:
                                     <FormattedDate date={updatedDate} />
                                 </span>
