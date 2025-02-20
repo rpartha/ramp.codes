@@ -12,9 +12,13 @@ const options = {
   theme: hyper,
 };
 
+const isPreview =
+  process.env.CF_PAGES_BRANCH && process.env.CF_PAGES_BRANCH !== "main";
+
 export default defineConfig({
-  site: "https://ramp.codes",
+  site: isPreview ? process.env.CF_PAGES_URL : "https://ramp.codes",
   integrations: [mdx(), sitemap({}), tailwind()],
+  output: "static",
   markdown: {
     syntaxHighlight: false, // Disable syntax built-in syntax hightlighting from astro
     rehypePlugins: [[rehypePrettyCode, options]],
