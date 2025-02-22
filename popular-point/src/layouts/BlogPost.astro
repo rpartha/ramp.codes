@@ -22,7 +22,7 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
             let figCaptions = Array.from(
                 document.querySelectorAll('figcaption'),
             );
-            let headers = Array.from(document.querySelectorAll('h1, h2, h3, h4'));
+            let headers = Array.from(document.querySelectorAll('h1:not(#privacyModal h1), h2:not(#privacyModal h2), h3:not(#privacyModal h3), h4:not(#privacyModal h4)'));
             let progressBar = document.getElementById('progress-bar');
 
             // Dynamically color the headers

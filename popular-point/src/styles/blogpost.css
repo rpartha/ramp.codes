@@ -5,11 +5,11 @@ h4 {
   font-family: "PP Eiko";
 }
 
-h2 {
+h2:not(#privacyModal h2) {
   font-size: 1.125rem;
 }
 
-h3 {
+h3:not(#privacyModal p) {
   font-size: 1rem;
 }
 
@@ -34,7 +34,7 @@ h4 {
 }
 
 ol,
-ul {
+ul:not(#privacyModal ul) {
   color: white;
   list-style: decimal;
   font-family: "PP Mori";
@@ -46,7 +46,7 @@ ul {
   padding-top: 1%;
 }
 
-p {
+p:not(#privacyModal p):not(#box) {
   color: rgba(0, 33, 33, 1);
   font-family: "PP Mori";
   font-size: 0.875rem;
@@ -56,10 +56,10 @@ p {
   hyphens: auto;
 }
 
-h2,
+h2:not(#privacyModal h2),
 h3,
 h4,
-p:not(li > p),
+p:not(li > p):not(#privacyModal p),
 img {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
@@ -70,11 +70,11 @@ img {
   padding-bottom: 1.5rem;
 }
 
-p:not(li > p) {
+p:not(li > p):not(#privacyModal p) {
   padding-top: 1.5%;
 }
 
-li > p {
+li:not(#privacyModal li) > p {
   padding-top: 1%;
 }
 
@@ -227,8 +227,7 @@ code > span[data-highlighted-line-id="remove"]::before {
   line-height: 1.15rem;
 }
 
-.blog-footer > i.ri-user-voice-line:before,
-i.ri-copyright-line:before {
+.blog-footer > i {
   padding-left: 1.5rem;
 }
 

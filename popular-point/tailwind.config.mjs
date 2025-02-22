@@ -19,9 +19,11 @@ export default {
       boxBG: "#000000",
       action: "#00274d",
       link: "#000a3a",
+      redir: "#19224d",
       diamond: "rgba(132, 132, 170, 1)",
       homeBorder: "#c0c0c0",
       pb: "linear-gradient(270deg, rgba(97,123,255,1) 0%, rgba(0,1,35,1) 100%)",
+      agree: "#228B22",
     },
     fontFamily: {
       sans: ["PP Mori", "sans-serif"],
@@ -47,16 +49,6 @@ export default {
         ".text-shadow-action": {
           textShadow:
             "-0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 0.5px 0 #000, 0.5px 0.5px 0 #000;",
-        },
-        ".gradient-text": {
-          backgroundImage:
-            "linear-gradient(270deg, rgba(97,123,255,1) 0%, rgba(0,1,35,1) 100%);",
-          backgroundClip: "text",
-          WebkitBackgroundClip: "text",
-          color: "transparent", // Makes the gradient visible inside the text
-          WebkitTextFillColor: "transparent",
-          "-moz-background-clip": "text", // Firefox
-          textFillColor: "rgba(0,1,35,1)", // Fallback solid color for Firefox
         },
       });
     },
