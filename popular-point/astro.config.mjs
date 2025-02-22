@@ -22,7 +22,6 @@ export default defineConfig({
   markdown: {
     syntaxHighlight: false, // Disable syntax built-in syntax hightlighting from astro
     rehypePlugins: [[rehypePrettyCode, options]],
-    //remarkPlugins: [remarkReadingTime],
     extendDefaultPlugins: true,
   },
 });
