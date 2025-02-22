@@ -5,11 +5,15 @@ interface Props {
     iso?: boolean;
 }
 const { date, locale, iso } = Astro.props;
-const formattedDate = iso ? date.toISOString().split('T')[0] : new Intl.DateTimeFormat(locale || navigator.language, {
-  month: '2-digit',
-  day: '2-digit',
-  year: 'numeric',
-}).format(date);
+const isServer = typeof navigator === "undefined";
+const userLocale = isServer ? (locale || "en-US") : (locale || navigator.language);
+const formattedDate = iso
+  ? date.toISOString().split('T')[0]
+  : new Intl.DateTimeFormat(userLocale, {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+    }).format(date);
 ---
 
 <time datetime={date.toISOString()} class="text-subText">
