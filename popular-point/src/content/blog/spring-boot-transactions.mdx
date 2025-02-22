@@ -52,7 +52,7 @@ public class SomeService {
 The above code is a much simplified version of what Spring Boot does under the hood:
 
 <ul
-    class="mt-1 list-decimal pl-12 pr-8 text-justify font-sans text-sm leading-snug text-body sublist"
+    id = "sublist" class="mt-1 list-decimal pl-12 pr-8 text-justify font-sans text-sm leading-snug text-body sublist"
 >
     <li>Transactions will start upon successful connection to a database. In the case of Enterprise applications, usually a datasource is configured somewhere (e.g. Hashicorp Vault) and connections will be retrieved from that. But you could also just get the connections from a `DriverManager` with the same input parameters.</li>
     <li>Turning off auto-commits does not ensure that every SQL execution occurs in its own transaction. Instead, you'll need to take the wheel and call `commit` yourself as long as the transaction is still open.</li>

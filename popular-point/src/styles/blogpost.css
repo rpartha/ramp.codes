@@ -34,7 +34,7 @@ h4 {
 }
 
 ol,
-ul:not(#privacyModal ul) {
+ul:not(#privacyModal ul):not(.sublist) {
   color: white;
   list-style: decimal;
   font-family: "PP Mori";
