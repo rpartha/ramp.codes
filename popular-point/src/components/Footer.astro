@@ -43,7 +43,7 @@ const { Content } = await render(privacy);
         </fragment>
 
         <fragment slot="content">
-            <div class="space-y-4">
+            <div class="space-y-4 overflow-y-auto max-h-[70vh] pr-4" id="modalScrollableContent">
                 <span class="font-sans font-bold text-md lu">Last Updated: <FormattedDate date={pubDate} iso={false}/></span>
                 <Content pubDate={pubDate}/>
             </div>
@@ -63,52 +63,79 @@ const { Content } = await render(privacy);
 </footer>
 
 <script>
-  // Get DOM elements
-  const modal = document.getElementById('privacyModal') as HTMLDialogElement;
-  const openModalLink = document.getElementById('openModalLink');
-  const acceptButton = document.getElementById('acceptPrivacy');
+// Get DOM elements
+const modal = document.getElementById('privacyModal') as HTMLDialogElement;
+const openModalLink = document.getElementById('openModalLink') as HTMLAnchorElement;
+const acceptButton = document.getElementById('acceptPrivacy') as HTMLButtonElement;
+const modalContent = document.getElementById('modalScrollableContent') as HTMLElement; // Scrollable area
 
-  if (modal && openModalLink && acceptButton) {
-    // Open modal handler
-    const openModal = () => {
-      modal.showModal();
-      document.body.style.overflow = 'hidden';
-    };
+if (modal && openModalLink && acceptButton && modalContent) {
+  // Initially disable the accept button
+  acceptButton.setAttribute('disabled', 'true');
+  acceptButton.classList.add('opacity-50', 'cursor-not-allowed');
 
-    // Close modal handler
-    const closeModal = () => {
-      modal.close();
-      document.body.style.overflow = '';
-    };
+  // Prevent page scrolling when modal opens
+  const openModal = () => {
+    modal.showModal();
+    document.body.style.overflow = 'hidden'; // Stop page scroll
+  };
 
-    // Event listeners
-    openModalLink.addEventListener('click', (e) => {
+  // Allow page scrolling when modal closes
+  const closeModal = () => {
+    modal.close();
+    document.body.style.overflow = ''; // Restore page scroll
+  };
+
+  // Check if user scrolled to the bottom of modal content
+  const checkScroll = () => {
+    const isScrolledToBottom =
+      modalContent.scrollHeight - modalContent.scrollTop <= modalContent.clientHeight + 1;
+
+    if (isScrolledToBottom) {
+      acceptButton.removeAttribute('disabled');
+      acceptButton.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+  };
+
+  // Event listeners
+  openModalLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    openModal();
+  });
+
+  modalContent.addEventListener('scroll', checkScroll);
+
+  // Disable ESC until user scrolls down
+  modal.addEventListener('cancel', (e) => {
+    if (acceptButton.hasAttribute('disabled')) {
       e.preventDefault();
-      openModal();
-    });
+    }
+  });
 
-    // Accept button click handler
-    acceptButton.addEventListener('click', () => {
-      closeModal();
-    });
+  // Accept button closes modal
+  acceptButton.addEventListener('click', closeModal);
 
-    // Close on overlay click
-    modal.addEventListener('click', (e) => {
-      const dialogDimensions = modal.getBoundingClientRect();
-      if (
-        e.clientX < dialogDimensions.left ||
-        e.clientX > dialogDimensions.right ||
-        e.clientY < dialogDimensions.top ||
-        e.clientY > dialogDimensions.bottom
-      ) {
+  // Click outside modal closes it only if scrolling is complete
+  modal.addEventListener('click', (e) => {
+    const dialogDimensions = modal.getBoundingClientRect();
+    if (
+      e.clientX < dialogDimensions.left ||
+      e.clientX > dialogDimensions.right ||
+      e.clientY < dialogDimensions.top ||
+      e.clientY > dialogDimensions.bottom
+    ) {
+      if (!acceptButton.hasAttribute('disabled')) {
         closeModal();
       }
-    });
-  }
+    }
+  });
+}
 
-  // Set current year
-  const currentYearElement = document.getElementById('current-year');
-  if (currentYearElement) {
-    currentYearElement.textContent = new Date().getFullYear().toString();
-  }
+// Set current year dynamically
+const currentYearElement = document.getElementById('current-year');
+if (currentYearElement) {
+  currentYearElement.textContent = new Date().getFullYear().toString();
+}
+
+
 </script>
