@@ -20,10 +20,39 @@ const diamondPositions = [
 ];
 
 const stats = [
-    { icon: "ri-map-pin-2-line", name: "Location", descr: "Chesterfield, NJ", customCss:"pb-4"},
-    { icon: "ri-sparkling-line", name: "Affiliations", descr: "麦わら大船団/Hufflepuff", customCss:"pb-4" },
-    { icon: "ri-fire-line", name: "Passions", descr: "Travel, Hiking, Watches, Figurines", customCss:"pb-4" },
-    { icon: "ri-book-marked-line", name: "Last Read", descr: "<i>Salvation of a Saint</i>, Keigo Higashino" },
+  {
+    icon: "ri-map-pin-2-line",
+    name: "Location",
+    descr: "Chesterfield, NJ"
+  },
+  {
+      icon: "ri-command-line",
+      name: "Tools",
+      descr: "IntelliJ IDEA Ultimate, Zed"
+  },
+  {
+      icon: "ri-tools-line",
+      name: "Workstation Setup",
+      descr: "<i class='text-asus ri-computer-line ri-md mr-1'></i>ASUS ProArt PA279CRV</br>" +
+             "<i class='text-finder ri-finder-line ri-md mr-1'></i>M4 Mac mini, M1 Macbook Air</br>" +
+             "<i class='text-oneplusk ri-keyboard-box-line ri-md mr-1'></i>Keychron 81 Pro</br>" +
+             "<i class='text-glacier ri-add-box-line ri-md mr-1'></i>TTC Silent Glacier V2"
+  },
+  {
+      icon: "ri-sparkling-line",
+      name: "Affiliations",
+      descr: "麦わら大船団/Hufflepuff"
+  },
+  {
+      icon: "ri-fire-line",
+      name: "Passions",
+      descr: "Travel, Hiking, Watches, Figurines"
+  },
+  {
+      icon: "ri-book-marked-line",
+      name: "Last Read",
+      descr: "<em>Salvation of a Saint</em>, Keigo Higashino"
+  },
 ];
 ---
 <!doctype html>
@@ -48,7 +77,7 @@ const stats = [
                     <p class="text-justify font-sans text-sm leading-snug mb-2">
                         I'm currently pursuing a <em class="font-serifItalic">Master's in Computer Science</em> with a specialization in
                         <em class="font-serifItalic"> Artificial Intelligence</em> at <span class="border-b-2 border-dashed border-redir text-redir font-bold"><a href="https://colorado.edu">UC Boulder</a></span> while working as a senior full-stack engineer at
-                        <span class="border-b-2 border-dashed border-redir text-redir font-bold"><a href="https://dtcc.com">DTCC</a></span>. I'm currently focused on building innovative, back-end heavy solutions within the Spring Boot-Angular-Postgres stack for our
+                        <span class="border-b-2 border-dashed border-redir text-redir font-bold"><a href="https://www.dtcc.com">DTCC</a></span>. I'm currently focused on building innovative, back-end heavy solutions within the Spring Boot-Angular-Postgres stack for our
                         self-service orchestration framework called SSP to automate various dev team workflows.<br/><br/> Beyond my technical endeavors,
                         I am very fortunate to have practiced Tabla for nearly 15 years (and counting) under the mentorship of Guru Dr. Pratik Devasthale.
                         This journey culminated in earning a Visharad Purna, equivalent to a Bachelor's in Music. I have also embraced the role of a teacher,
@@ -68,7 +97,7 @@ const stats = [
                                 {
                                   stats.map((stat, index) =>
                                     <fragment>
-                                        <HomeStat icon={stat.icon} stat={stat.name} descr={stat.descr} customCss={stat.customCss ? stat.customCss : ''}/>
+                                        <HomeStat icon={stat.icon} stat={stat.name} descr={stat.descr} customCss={index < stats.length - 1 ? 'pb-4' : ''}/>
                                         {
                                           index < stats.length - 1 && <hr style="border: none; border-top: 1px solid #c0c0c0;">
                                         }
