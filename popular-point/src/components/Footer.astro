@@ -1,7 +1,7 @@
 ---
 import Modal from './Modal.astro';
 import FormattedDate from './FormattedDate.astro';
-import { getEntry, render } from 'astro:content';
+import { getEntry } from 'astro:content';
 
 
 interface Props {
@@ -10,11 +10,13 @@ interface Props {
 const { customCss } = Astro.props;
 
 const privacy = await getEntry('blog', 'privacy');
+if (!privacy) {
+    throw new Error('Privacy policy not found!');
+}
 
 // Extract the frontmatter pubDate from the entry’s data
 const { pubDate } = privacy.data;
-
-const { Content } = await render(privacy);
+const { Content } = await privacy.render();
 ---
 <footer>
     <div class={`flex flex-row${customCss}`}>
