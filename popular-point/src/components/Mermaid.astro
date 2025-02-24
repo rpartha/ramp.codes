@@ -1,0 +1,25 @@
+---
+interface Props {
+    title: String;
+}
+const { title } = Astro.props;
+const slotContent = await Astro.slots.render('default');
+const modifiedMermaidCode = slotContent.replace(
+    /font-family:\s*\w+(?:,\s*\w+)*;/,
+    'font-family: "PP Mori", sans-serif;'
+);
+---
+
+<figure data-rehype-pretty-code-figure>
+    <!--<div style="position: relative;">
+
+    </div>-->
+     <figcaption data-rehype-pretty-code-title="" data-language="mermaid" data-theme="" tabindex="0">
+            {title}.mermaid
+    </figcaption>
+    <pre style="background-color:hsl(240, 3%, 8%);color:#F5F5F5" data-original-code={slotContent}>
+        <code>
+            <slot/>
+        </code>
+    </pre>
+</figure>

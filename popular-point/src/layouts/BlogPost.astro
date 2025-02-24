@@ -70,6 +70,8 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
 
             async function copyCode(block:any, button:any) {
                 let code = block.querySelector('code');
+                let preElement = block.closest('pre'); // Get the closest <pre> element
+                let originalCode = preElement?.getAttribute('data-original-code'); // Get Mermaid code
 
                 // Get all text lines except those marked for removal
                 let lines = Array.from(code.querySelectorAll('span[data-line]'))
@@ -78,21 +80,15 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
                     .map((span:any) => span.innerText);
 
                 // Join the filtered lines
-                let text = lines.join('\n');
+                let text = originalCode ? originalCode.trim() : lines.join('\n');
 
                 await navigator.clipboard.writeText(text);
 
-                button.innerText = 'Code Copied!';
-
-                if (button.innerText === 'Code Copied!') {
-                    button.style.paddingTop = '0.3rem';
-                }
+                const originalIcon = button.innerHTML;
+                button.innerHTML = '<i class="ri-check-line ri-xl text-copy flex max-sm:hidden"></i>';
 
                 setTimeout(() => {
-                    button.innerHTML = copyButtonIcon;
-                    if (button.innerHTML === copyButtonIcon) {
-                        button.style.paddingTop = '0.5rem';
-                    }
+                    button.innerHTML = originalIcon;
                 }, 700);
             }
 
@@ -163,6 +159,7 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
                     'bash': 'sh',
                     'powershell': 'ps1',
                     'dockerfile': 'dockerfile',
+                    'mermaid': 'mermaid'
                     // Add more mappings as needed
                 };
 

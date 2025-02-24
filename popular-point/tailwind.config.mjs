@@ -5,6 +5,7 @@ export default {
     colors: {
       back: "#rgba(0,1,35,1)",
       black: "#000",
+      subtle: "hsl(240, 3%, 8%)",
       body: "rgba(0, 33, 33, 1)",
       gray: "#52525b",
       copy: "#6B7280",

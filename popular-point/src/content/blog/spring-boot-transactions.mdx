@@ -8,6 +8,7 @@ draft: false
 ---
 import Collapsible from '../../components/Collapsible.astro';
 import UpdateBox from '../../components/UpdateBox.astro';
+import Mermaid from '../../components/Mermaid.astro';
 
 <UpdateBox boxText="Updated to talk about what is a TransactionTemplate and how do we use one."/>
 
@@ -228,6 +229,33 @@ public class UserService {
     Spring dynamically creates "invisible" proxies for such classes. Proxies, thanks to Spring containing IoC containers at its core, provide a way for Spring to inject behaviors around method calls of the object being proxied (but not at runtime). That means when _external_ clients attempt to make a call to your object, the calls are intercepted and the behaviors are injected via the _proxy_ object around your _actual_ bean.
 
     _"But what about self-invoked methods?"_ An important thing to note is that your bean has no knowledge that it is being wrapped in a proxy. So, if it invokes one of its own methods, it will not use the proxy to do so but instead use the `this` reference. Proxies aren't magic - they're really just Spring classes that become "visible" when stepping through the code.
+
+    In case you're interested, here's a visual representation of what we just talked about:
+
+    <Mermaid title="user_service_transaction_flow">
+      ```mermaid
+        %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#000000', 'primaryTextColor': '#e0e0e0', 'primaryBorderColor': '#a0a0a0', 'fontFamily': 'PP Mori, sans-serif'}}}%%
+        sequenceDiagram
+          participant C as Client
+          participant P as "@Transactional Proxy"
+          participant S as "UserService"
+          participant T as "TransactionManager"
+          participant D as "Database"
+
+          C->>P: createUser()
+          P->>T: begin transaction
+          T-->>P: transaction started
+          P->>S: createUser()
+          S->>D: save user data
+          D-->>S: user saved
+          S->>D: update user metadata
+          D-->>S: metadata updated
+          S-->>P: user created
+          P->>T: commit transaction
+          T-->>P: transaction committed
+          P-->>C: return result
+      ```
+    </Mermaid>
 </Collapsible>
 
 ### Programmatic Transaction Management

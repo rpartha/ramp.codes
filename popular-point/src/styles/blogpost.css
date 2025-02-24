@@ -2,58 +2,62 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: "PP Eiko";
+    font-family: "PP Eiko";
 }
 
 h2:not(#privacyModal h2) {
-  font-size: 1.125rem;
+    font-size: 1.125rem;
 }
 
 h3:not(#privacyModal p) {
-  font-size: 1rem;
+    font-size: 1rem;
 }
 
 h4 {
-  font-size: 0.875rem;
+    font-size: 0.875rem;
 }
 
 h2,
 h3,
 h4 {
-  color: #777777;
+    color: #777777;
 }
 
 .tbl {
-  padding-top: 2%;
+    padding-top: 2%;
 }
 
 .db-tbl {
-  font-family: dm, monospace;
-  style: bold;
-  text-transform: uppercase;
+    font-family: dm, monospace;
+    style: bold;
+    text-transform: uppercase;
+}
+
+pre[data-original-code] {
+    font-family: 'PP Mori', sans-serif;
 }
 
 ol,
 ul:not(#privacyModal ul):not(.sublist) {
-  color: white;
-  list-style: decimal;
-  font-family: "PP Mori";
-  font-size: 1.125rem;
-  line-height: 1.25rem;
-  text-align: justify;
-  text-justify: newspaper;
-  padding-left: 3.5rem;
-  padding-top: 1%;
+    color: white;
+    list-style: decimal;
+    font-family: "PP Mori";
+    font-size: 1.125rem;
+    line-height: 1.25rem;
+    text-align: justify;
+    text-justify: newspaper;
+    padding-left: 3.5rem;
+    padding-top: 1%;
 }
 
 p:not(#privacyModal p):not(#box) {
-  color: rgba(0, 33, 33, 1);
-  font-family: "PP Mori";
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  text-align: justify;
-  text-justify: newspaper;
-  hyphens: auto;
+    color: rgba(0, 33, 33, 1);
+    font-family: "PP Mori";
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    text-align: justify;
+    text-justify: newspaper;
+    hyphens: auto;
 }
 
 h2:not(#privacyModal h2),
@@ -61,217 +65,221 @@ h3,
 h4,
 p:not(li > p):not(#privacyModal p),
 img {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
 }
 
 img {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
 }
 
 p:not(li > p):not(#privacyModal p) {
-  padding-top: 1.5%;
+    padding-top: 1.5%;
 }
 
-li:not(#privacyModal li) > p {
-  padding-top: 1%;
+li:not(#privacyModal li)>p {
+    padding-top: 1%;
 }
 
 em {
-  font-family: "PP Mori";
+    font-family: "PP Mori";
 }
 
 .note,
 pre,
 table {
-  margin-left: 1.5rem;
-  margin-right: 1.5rem;
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
 }
 
 pre {
-  border-bottom-left-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
 }
 
 .note {
-  margin-top: 1rem;
+    margin-top: 1rem;
 }
 
-.note > div > div > p {
-  padding-left: 1rem;
-  padding-top: 0.1rem;
+.note>div>div>p {
+    padding-left: 1rem;
+    padding-top: 0.1rem;
 }
 
-code > span {
-  padding-left: 1rem;
+code>span {
+    padding-left: 1rem;
 }
 
 pre {
-  margin-left: 1.5rem;
-  margin-right: 1.5rem;
-  margin-bottom: 1rem;
-  border-bottom-left-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
-  position: relative;
-  overflow: hidden; /* Add this to contain the scrollbar */
-  width: calc(100% - 3rem); /* Account for margins */
-  box-sizing: border-box;
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+    margin-bottom: 1rem;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    /* Add this to contain the scrollbar */
+    width: calc(100% - 3rem);
+    /* Account for margins */
+    box-sizing: border-box;
 }
 
-pre > code {
-  display: grid;
-  padding: 1rem 0;
-  overflow: auto;
-  font-size: 0.9rem;
-  width: 100%;
-  box-sizing: border-box;
-  padding-right: 1rem; /* Add padding for scrollbar */
+pre>code {
+    display: grid;
+    padding: 1rem 0;
+    overflow: auto;
+    font-size: 0.9rem;
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 1rem;
+    /* Add padding for scrollbar */
 }
 
 /* Optional: Style the scrollbar */
-pre > code::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+pre>code::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
 }
 
-pre > code::-webkit-scrollbar-track {
-  background: transparent;
+pre>code::-webkit-scrollbar-track {
+    background: transparent;
 }
 
-pre > code::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+pre>code::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
 }
 
-p > code,
-li > code,
-em > code,
-td > code {
-  font-size: 0.9rem;
-  color: #000000;
-  transform: translateY(0.125rem);
-  border-radius: 0.25rem;
-  background-color: #dddddd;
-  padding-right: 0.2rem;
-  padding-left: 0.2rem;
+p>code,
+li>code,
+em>code,
+td>code {
+    font-size: 0.9rem;
+    color: #000000;
+    transform: translateY(0.125rem);
+    border-radius: 0.25rem;
+    background-color: #dddddd;
+    padding-right: 0.2rem;
+    padding-left: 0.2rem;
 }
 
 figure [data-rehype-pretty-code-title] {
-  margin-left: 1.5rem;
-  margin-top: 1rem;
-  margin-right: 1.5rem;
-  padding: 0 0.25rem;
-  border-left: 0.4rem solid transparent;
-  border-top-left-radius: 0.5rem;
-  border-top-right-radius: 0.5rem;
-  background-color: #000000;
-  color: #4b5563;
-  display: grid;
-  font-family: dm, monospace;
-  font-size: 1.15rem;
-  overflow: auto;
-  border-bottom: 1px solid hsl(0, 0%, 100%, 0.12);
+    margin-left: 1.5rem;
+    margin-top: 1rem;
+    margin-right: 1.5rem;
+    padding: 0 0.25rem;
+    border-left: 0.4rem solid transparent;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    background-color: #000000;
+    color: #4b5563;
+    display: grid;
+    font-family: dm, monospace;
+    font-size: 1.15rem;
+    overflow: auto;
+    border-bottom: 1px solid hsl(0, 0%, 100%, 0.12);
 }
 
 h1 {
-  margin-left: 1.5rem;
+    margin-left: 1.5rem;
 }
 
 div.stats {
-  margin-left: -0.3rem;
+    margin-left: -0.3rem;
 }
 
 .back {
-  margin-left: 1.25rem;
+    margin-left: 1.25rem;
 }
 
 code {
-  position: relative;
-  width: 100%;
+    position: relative;
+    width: 100%;
 }
 
-code > span[data-line] {
-  border-left: 0.4rem solid transparent;
-  padding: 0 0.4rem;
+code>span[data-line] {
+    border-left: 0.4rem solid transparent;
+    padding: 0 0.4rem;
 }
 
-code > span[data-highlighted-line-id="space"] {
-  margin-left: 1rem;
+code>span[data-highlighted-line-id="space"] {
+    margin-left: 1rem;
 }
 
-code > span[data-highlighted-line-id="addWithSpace"] > span:first-child {
-  margin-left: 0.45em;
+code>span[data-highlighted-line-id="addWithSpace"]>span:first-child {
+    margin-left: 0.45em;
 }
 
-code > span[data-highlighted-line-id="add"],
-code > span[data-highlighted-line-id="addWithSpace"] {
-  background-color: #293c24;
-  border-color: #89ca78;
+code>span[data-highlighted-line-id="add"],
+code>span[data-highlighted-line-id="addWithSpace"] {
+    background-color: #293c24;
+    border-color: #89ca78;
 }
 
-code > span[data-highlighted-line-id="point"] {
-  background-color: #41435b;
-  border-color: #3a3c51;
+code>span[data-highlighted-line-id="point"] {
+    background-color: #042f2e;
+    border-color: #0f766e;
 }
 
-code > span[data-highlighted-line-id="remove"] {
-  background-color: #471a21;
-  border-color: #ef596f;
+code>span[data-highlighted-line-id="remove"] {
+    background-color: #471a21;
+    border-color: #ef596f;
 }
 
-code > span[data-highlighted-line-id="add"]::before,
-code > span[data-highlighted-line-id="addWithSpace"]::before {
-  font-size: 0.9rem;
-  color: #89ca78;
-  content: "+";
+code>span[data-highlighted-line-id="add"]::before,
+code>span[data-highlighted-line-id="addWithSpace"]::before {
+    font-size: 0.9rem;
+    color: #89ca78;
+    content: "+";
 }
 
-code > span[data-highlighted-line-id="add"]::before {
-  position: absolute;
+code>span[data-highlighted-line-id="add"]::before {
+    position: absolute;
 }
 
-code > span[data-highlighted-line-id="addWithSpace"]::before {
-  position: relative;
+code>span[data-highlighted-line-id="addWithSpace"]::before {
+    position: relative;
 }
 
-code > span[data-highlighted-line-id="add"] > span:first-child {
-  /*margin-left: 1rem;*/
+code>span[data-highlighted-line-id="add"]>span:first-child {
+    /*margin-left: 1rem;*/
 }
 
-code > span[data-highlighted-line-id="remove"]::before {
-  font-size: 0.9rem;
-  color: #ef596f;
-  content: "-";
-  position: absolute;
+code>span[data-highlighted-line-id="remove"]::before {
+    font-size: 0.9rem;
+    color: #ef596f;
+    content: "-";
+    position: absolute;
 }
 
 .copy-code {
-  position: absolute;
-  top: 0;
-  right: 0;
-  color: #d5d8da;
-  padding-top: 0.5rem;
-  font-size: 0.75rem;
-  margin-right: 3em;
-  line-height: 1.15rem;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #d5d8da;
+    padding-top: 0.5rem;
+    font-size: 0.75rem;
+    margin-right: 3em;
+    line-height: 1.15rem;
 }
 
 .download-code {
-  position: absolute;
-  top: 0;
-  right: 3em; /* Position it 3em from the right edge */
-  color: #d5d8da;
-  padding-top: 0.5rem;
-  font-size: 0.75rem;
-  margin-right: 3em;
-  line-height: 1.15rem;
+    position: absolute;
+    top: 0;
+    right: 3em;
+    /* Position it 3em from the right edge */
+    color: #d5d8da;
+    padding-top: 0.5rem;
+    font-size: 0.75rem;
+    margin-right: 3em;
+    line-height: 1.15rem;
 }
 
-.blog-footer > i {
-  padding-left: 1.5rem;
+.blog-footer>i {
+    padding-left: 1.5rem;
 }
 
 .blog-footer {
-  padding-right: 1.5rem;
+    padding-right: 1.5rem;
 }

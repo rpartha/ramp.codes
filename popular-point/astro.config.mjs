@@ -4,12 +4,22 @@ import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
 import rehypePrettyCode from "rehype-pretty-code";
 import hyper from "./src/styles/hyper.json";
+import customPro from './src/styles/custom-pro.json'
+import rehypeMermaid from "rehype-mermaid";
 
 const options = {
   // Specify the theme to use or a custom theme json, in our case
   // it will be a moonlight-II theme from
   // https://github.com/atomiks/moonlight-vscode-theme/blob/master/src/moonlight-ii.json
-  theme: hyper,
+  theme: customPro,
+};
+
+const mermaidOptions = {
+  mermaidConfig: {
+    themeVariables: {
+      fontFamily: "'PP Mori', 'sans-serif'", // Custom font
+    },
+  }
 };
 
 const isPreview =
@@ -21,7 +31,7 @@ export default defineConfig({
   output: "static",
   markdown: {
     syntaxHighlight: false, // Disable syntax built-in syntax hightlighting from astro
-    rehypePlugins: [[rehypePrettyCode, options]],
+    rehypePlugins: [[rehypeMermaid, mermaidOptions], [rehypePrettyCode, options]],
     extendDefaultPlugins: true,
   },
 });

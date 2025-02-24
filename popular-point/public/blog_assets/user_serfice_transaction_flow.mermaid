@@ -1,0 +1,19 @@
+sequenceDiagram
+    participant C as Client
+    participant P as "@Transactional Proxy"
+    participant S as "UserService"
+    participant T as "TransactionManager"
+    participant D as "Database"
+
+    C->>P: createUser()
+    P->>T: begin transaction
+    T-->>P: transaction started
+    P->>S: createUser()
+    S->>D: save user data
+    D-->>S: user saved
+    S->>D: update user metadata
+    D-->>S: metadata updated
+    S-->>P: user created
+    P->>T: commit transaction
+    T-->>P: transaction committed
+    P-->>C: return result
