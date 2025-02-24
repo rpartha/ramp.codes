@@ -157,7 +157,7 @@ We can also define the transaction isolation level which dictates how concurrent
 
 We can set a `timeout` - the max number of seconds that a transaction is allowed to take before it gets rolled back - for any operation wrapped by a transaction. Let’s set a three-second timeout with the repeatable read transaction isolation level:
 
-```java title=" "
+```java title="&nbsp;"
 @Transactional(isolation = Isolation.REPETABLE_READ, timeout = 3)
 ```
 

@@ -15,8 +15,9 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
         <BaseHead title={title} description={description} />
 
         <script>
-            let copyButtonIcon =
-                '<i class="ri-file-copy-line ri-xl text-copy flex max-sm:hidden"></i>';
+            let copyButtonIcon = '<i class="ri-file-copy-line ri-xl text-copy flex max-sm:hidden"></i>';
+            let downloadButtonIcon = '<i class="ri-download-2-line ri-xl text-copy flex max-sm:hidden"></i>';
+
             let codeBlocks = Array.from(document.querySelectorAll('pre'));
             let figCaptions = Array.from(
                 document.querySelectorAll('figcaption'),
@@ -41,23 +42,43 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
                 copyButton.className = 'copy-code';
                 copyButton.innerHTML = copyButtonIcon;
 
+                let downloadButton = document.createElement('button');
+                downloadButton.className = 'download-code';
+                downloadButton.innerHTML = downloadButtonIcon;
+
                 if (figCaption !== undefined) {
                   figCaption.setAttribute('tabindex', '0');
+
                   figCaption.appendChild(copyButton);
+                  figCaption.appendChild(downloadButton);
 
                   // wrap codebock with relative parent element
                   codeBlock?.parentNode?.insertBefore(wrapper, figCaption);
                   wrapper.appendChild(figCaption);
-                }
 
-                copyButton.addEventListener('click', async () => {
-                    await copyCode(codeBlock, copyButton);
-                });
+                  const language = figCaption.getAttribute('data-language') || 'txt';
+
+                  copyButton.addEventListener('click', async () => {
+                      await copyCode(codeBlock, copyButton);
+                  });
+
+                  downloadButton.addEventListener('click', async () => {
+                      await downloadCode(codeBlock, downloadButton, language);
+                  });
+                }
             }
 
             async function copyCode(block:any, button:any) {
                 let code = block.querySelector('code');
-                let text = code.innerText;
+
+                // Get all text lines except those marked for removal
+                let lines = Array.from(code.querySelectorAll('span[data-line]'))
+                    .filter((span:any) => !span.hasAttribute('data-highlighted-line-id') ||
+                                    span.getAttribute('data-highlighted-line-id') !== 'remove')
+                    .map((span:any) => span.innerText);
+
+                // Join the filtered lines
+                let text = lines.join('\n');
 
                 await navigator.clipboard.writeText(text);
 
@@ -73,6 +94,79 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
                         button.style.paddingTop = '0.5rem';
                     }
                 }, 700);
+            }
+
+            async function downloadCode(block: any, button: any, language: string) {
+                let code = block.querySelector('code');
+                let figCaption = block.parentNode.querySelector('figcaption');
+
+                // Get all text lines except those marked for removal
+                let lines = Array.from(code.querySelectorAll('span[data-line]'))
+                    .filter((span: any) => !span.hasAttribute('data-highlighted-line-id') ||
+                                        span.getAttribute('data-highlighted-line-id') !== 'remove')
+                    .map((span: any) => span.innerText);
+
+                // Join the filtered lines
+                let text = lines.join('\n');
+
+                // Create file extension based on language
+                let filename = figCaption.childNodes[0].textContent.trim();
+
+                // If no filename is found, fallback to default with correct extension
+                if (!filename) {
+                    const fileExtension = getFileExtension(language);
+                    filename = `code.${fileExtension}`;
+                }
+
+                // Create blob and download
+                const blob = new Blob([text], { type: 'text/plain' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+
+                // Visual feedback
+                const originalIcon = button.innerHTML;
+                button.innerHTML = '<i class="ri-check-line ri-xl text-copy flex max-sm:hidden"></i>';
+
+                setTimeout(() => {
+                    button.innerHTML = originalIcon;
+                }, 700);
+            }
+
+            function getFileExtension(language: string): string {
+                const extensionMap: { [key: string]: string } = {
+                    'javascript': 'js',
+                    'typescript': 'ts',
+                    'python': 'py',
+                    'java': 'java',
+                    'cpp': 'cpp',
+                    'c': 'c',
+                    'csharp': 'cs',
+                    'php': 'php',
+                    'ruby': 'rb',
+                    'rust': 'rs',
+                    'go': 'go',
+                    'swift': 'swift',
+                    'kotlin': 'kt',
+                    'sql': 'sql',
+                    'html': 'html',
+                    'css': 'css',
+                    'json': 'json',
+                    'yaml': 'yml',
+                    'markdown': 'md',
+                    'shell': 'sh',
+                    'bash': 'sh',
+                    'powershell': 'ps1',
+                    'dockerfile': 'dockerfile',
+                    // Add more mappings as needed
+                };
+
+                return extensionMap[language.toLowerCase()] || 'txt';
             }
 
             window.addEventListener('scroll', () => {

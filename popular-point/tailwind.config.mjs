@@ -7,6 +7,7 @@ export default {
       black: "#000",
       body: "rgba(0, 33, 33, 1)",
       gray: "#52525b",
+      copy: "#6B7280",
       teal: "#004d4d",
       header: "#000808",
       subText: "#818181",
