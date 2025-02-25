@@ -235,10 +235,10 @@ public class UserService {
     <Mermaid title="user_service_transaction_flow" code={`
         sequenceDiagram
           participant C as Client
-          participant P as "@Transactional Proxy"
-          participant S as "UserService"
-          participant T as "TransactionManager"
-          participant D as "Database"
+          participant P as @Transactional_Proxy
+          participant S as UserService
+          participant T as TransactionManager
+          participant D as Database
 
           C->>P: createUser()
           P->>T: begin transaction
