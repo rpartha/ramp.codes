@@ -13,9 +13,33 @@ const { title, code } = Astro.props;
      <figcaption data-rehype-pretty-code-title="" data-language="mermaid" data-theme="" tabindex="0">
             {title}.mermaid
     </figcaption>
-    <pre style="background-color:hsl(240, 3%, 8%);color:#F5F5F5" data-raw-mermaid={code}>
+    <!--<pre style="background-color:hsl(240, 3%, 8%);color:#F5F5F5" class = "mermaid" data-raw-mermaid={code}>
         <code>
-            <slot/>
+            {code}
         </code>
+    </pre>-->
+    <pre class="mermaid" style="background-color:hsl(240, 3%, 8%);color:#F5F5F5" data-raw-mermaid={code}>
+        {code.trim()}
     </pre>
 </figure>
+<script>
+  import mermaid from 'mermaid';
+  // Initialize mermaid
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+        primaryColor: '#000000',
+        primaryTextColor: '#e0e0e0',
+        primaryBorderColor: '#a0a0a0',
+        fontFamily: 'PP Mori, sans-serif'
+    },
+    securityLevel: 'loose',
+    htmlLabels: true,
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: true,
+      curve: 'basis'
+    }
+  });
+</script>
