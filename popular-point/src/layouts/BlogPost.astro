@@ -15,6 +15,18 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
         <BaseHead title={title} description={description} />
 
         <script>
+            const EXTENSION_MAP: Record<string, string> = {
+                javascript: 'js',
+                typescript: 'ts',
+                java: 'java',
+                sql: 'sql',
+                html: 'html',
+                css: 'css',
+                mermaid: 'mermaid',
+                bash: 'sh',
+                python: 'py',
+            };
+
             let copyButtonIcon = '<i class="ri-file-copy-line ri-xl text-copy flex max-sm:hidden"></i>';
             let downloadButtonIcon = '<i class="ri-download-2-line ri-xl text-copy flex max-sm:hidden"></i>';
 
@@ -69,19 +81,7 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
             }
 
             async function copyCode(block:any, button:any) {
-                let code = block.querySelector('code');
-                let preElement = block.closest('pre'); // Get the closest <pre> element
-                let originalCode = preElement?.getAttribute('data-original-code'); // Get Mermaid code
-
-                // Get all text lines except those marked for removal
-                let lines = Array.from(code.querySelectorAll('span[data-line]'))
-                    .filter((span:any) => !span.hasAttribute('data-highlighted-line-id') ||
-                                    span.getAttribute('data-highlighted-line-id') !== 'remove')
-                    .map((span:any) => span.innerText);
-
-                // Join the filtered lines
-                let text = originalCode ? originalCode.trim() : lines.join('\n');
-
+                let text = getText(block);
                 await navigator.clipboard.writeText(text);
 
                 const originalIcon = button.innerHTML;
@@ -93,17 +93,8 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
             }
 
             async function downloadCode(block: any, button: any, language: string) {
-                let code = block.querySelector('code');
                 let figCaption = block.parentNode.querySelector('figcaption');
-
-                // Get all text lines except those marked for removal
-                let lines = Array.from(code.querySelectorAll('span[data-line]'))
-                    .filter((span: any) => !span.hasAttribute('data-highlighted-line-id') ||
-                                        span.getAttribute('data-highlighted-line-id') !== 'remove')
-                    .map((span: any) => span.innerText);
-
-                // Join the filtered lines
-                let text = lines.join('\n');
+                let text = getText(block);
 
                 // Create file extension based on language
                 let filename = figCaption.childNodes[0].textContent.trim();
@@ -134,36 +125,27 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
                 }, 700);
             }
 
-            function getFileExtension(language: string): string {
-                const extensionMap: { [key: string]: string } = {
-                    'javascript': 'js',
-                    'typescript': 'ts',
-                    'python': 'py',
-                    'java': 'java',
-                    'cpp': 'cpp',
-                    'c': 'c',
-                    'csharp': 'cs',
-                    'php': 'php',
-                    'ruby': 'rb',
-                    'rust': 'rs',
-                    'go': 'go',
-                    'swift': 'swift',
-                    'kotlin': 'kt',
-                    'sql': 'sql',
-                    'html': 'html',
-                    'css': 'css',
-                    'json': 'json',
-                    'yaml': 'yml',
-                    'markdown': 'md',
-                    'shell': 'sh',
-                    'bash': 'sh',
-                    'powershell': 'ps1',
-                    'dockerfile': 'dockerfile',
-                    'mermaid': 'mermaid'
-                    // Add more mappings as needed
-                };
+            function getText(block: any) {
+              let rawMermaid = block.getAttribute("data-raw-mermaid");
 
-                return extensionMap[language.toLowerCase()] || 'txt';
+              if (rawMermaid) {
+                return rawMermaid;
+              } else {
+                let code = block.querySelector('code');
+
+                // Get all text lines except those marked for removal
+                let lines = Array.from(code.querySelectorAll('span[data-line]'))
+                    .filter((span:any) => !span.hasAttribute('data-highlighted-line-id') ||
+                                    span.getAttribute('data-highlighted-line-id') !== 'remove')
+                    .map((span:any) => span.innerText);
+
+                // Join the filtered lines
+                return lines.join('\n');
+              }
+            }
+
+            function getFileExtension(language: string): string {
+              return EXTENSION_MAP[language.toLowerCase()] || 'txt';
             }
 
             window.addEventListener('scroll', () => {
