@@ -1,0 +1,45 @@
+---
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+---
+
+<dialog
+  id={id}
+  class="modal p-0 backdrop:bg-black/80 border-none"
+>
+  <div class="w-full max-w-md bg-white rounded-lg shadow-2xl">
+    <div>
+      {/* Header slot */}
+      <div class="p-4 ">
+        <slot name="header" />
+      </div>
+
+      {/* Main content slot */}
+      <div class="p-4">
+        <slot name="content" />
+      </div>
+
+      {/* Footer slot for accept button */}
+      <slot name="footer" />
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .modal {
+    max-width: 32rem; /* max-w-md equivalent */
+    max-height: 90vh;
+    //margin: auto;
+  }
+
+  .modal[open] {
+    display: block;
+  }
+
+  .modal::backdrop {
+    background: rgba(0, 0, 0, 0.8);
+  }
+</style>

@@ -337,6 +337,10 @@ html {
   scroll-behavior: smooth;
 }
 
+* {
+  scrollbar-width: thin;
+}
+
 @layer utilities {
   .custom-bg {
     @apply relative h-full w-full text-body font-sans;

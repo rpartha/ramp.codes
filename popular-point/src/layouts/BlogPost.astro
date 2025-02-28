@@ -1,6 +1,5 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import BaseHead from '../components/BaseHead.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Footer from '../components/Footer.astro';
@@ -16,19 +15,32 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
         <BaseHead title={title} description={description} />
 
         <script>
-            let copyButtonIcon =
-                '<i class="ri-file-copy-line ri-xl text-copy flex max-sm:hidden"></i>';
+            const EXTENSION_MAP: Record<string, string> = {
+                javascript: 'js',
+                typescript: 'ts',
+                java: 'java',
+                sql: 'sql',
+                html: 'html',
+                css: 'css',
+                mermaid: 'mermaid',
+                bash: 'sh',
+                python: 'py',
+            };
+
+            let copyButtonIcon = '<i class="ri-file-copy-line ri-xl text-copy flex max-sm:hidden"></i>';
+            let downloadButtonIcon = '<i class="ri-download-2-line ri-xl text-copy flex max-sm:hidden"></i>';
+
             let codeBlocks = Array.from(document.querySelectorAll('pre'));
             let figCaptions = Array.from(
                 document.querySelectorAll('figcaption'),
             );
-            let headers = Array.from(document.querySelectorAll('h1, h2, h3, h4'));
+            let headers = Array.from(document.querySelectorAll('h1:not(#privacyModal h1), h2:not(#privacyModal h2), h3:not(#privacyModal h3), h4:not(#privacyModal h4)'));
             let progressBar = document.getElementById('progress-bar');
 
             // Dynamically color the headers
             headers.forEach(header => {
               if (header.tagName.toLowerCase() !== 'h1') {
-                header.classList.add('pt-6', 'olg:pt-5');
+                header.classList.add('pt-4', 'olg:pt-3');
               }
             });
 
@@ -42,38 +54,98 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
                 copyButton.className = 'copy-code';
                 copyButton.innerHTML = copyButtonIcon;
 
+                let downloadButton = document.createElement('button');
+                downloadButton.className = 'download-code';
+                downloadButton.innerHTML = downloadButtonIcon;
+
                 if (figCaption !== undefined) {
                   figCaption.setAttribute('tabindex', '0');
+
                   figCaption.appendChild(copyButton);
+                  figCaption.appendChild(downloadButton);
 
                   // wrap codebock with relative parent element
                   codeBlock?.parentNode?.insertBefore(wrapper, figCaption);
                   wrapper.appendChild(figCaption);
-                }
 
-                copyButton.addEventListener('click', async () => {
-                    await copyCode(codeBlock, copyButton);
-                });
+                  const language = figCaption.getAttribute('data-language') || 'txt';
+
+                  copyButton.addEventListener('click', async () => {
+                      await copyCode(codeBlock, copyButton);
+                  });
+
+                  downloadButton.addEventListener('click', async () => {
+                      await downloadCode(codeBlock, downloadButton, language);
+                  });
+                }
             }
 
             async function copyCode(block:any, button:any) {
-                let code = block.querySelector('code');
-                let text = code.innerText;
-
+                let text = getText(block);
                 await navigator.clipboard.writeText(text);
 
-                button.innerText = 'Code Copied!';
-
-                if (button.innerText === 'Code Copied!') {
-                    button.style.paddingTop = '0.3rem';
-                }
+                const originalIcon = button.innerHTML;
+                button.innerHTML = '<i class="ri-check-line ri-xl text-copy flex max-sm:hidden"></i>';
 
                 setTimeout(() => {
-                    button.innerHTML = copyButtonIcon;
-                    if (button.innerHTML === copyButtonIcon) {
-                        button.style.paddingTop = '0.5rem';
-                    }
+                    button.innerHTML = originalIcon;
                 }, 700);
+            }
+
+            async function downloadCode(block: any, button: any, language: string) {
+                let figCaption = block.parentNode.querySelector('figcaption');
+                let text = getText(block);
+
+                // Create file extension based on language
+                let filename = figCaption.childNodes[0].textContent.trim();
+
+                // If no filename is found, fallback to default with correct extension
+                if (!filename) {
+                    const fileExtension = getFileExtension(language);
+                    filename = `code.${fileExtension}`;
+                }
+
+                // Create blob and download
+                const blob = new Blob([text], { type: 'text/plain' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+
+                // Visual feedback
+                const originalIcon = button.innerHTML;
+                button.innerHTML = '<i class="ri-check-line ri-xl text-copy flex max-sm:hidden"></i>';
+
+                setTimeout(() => {
+                    button.innerHTML = originalIcon;
+                }, 700);
+            }
+
+            function getText(block: any) {
+              let rawMermaid = block.getAttribute("data-raw-mermaid");
+
+              if (rawMermaid) {
+                return rawMermaid;
+              } else {
+                let code = block.querySelector('code');
+
+                // Get all text lines except those marked for removal
+                let lines = Array.from(code.querySelectorAll('span[data-line]'))
+                    .filter((span:any) => !span.hasAttribute('data-highlighted-line-id') ||
+                                    span.getAttribute('data-highlighted-line-id') !== 'remove')
+                    .map((span:any) => span.innerText);
+
+                // Join the filtered lines
+                return lines.join('\n');
+              }
+            }
+
+            function getFileExtension(language: string): string {
+              return EXTENSION_MAP[language.toLowerCase()] || 'txt';
             }
 
             window.addEventListener('scroll', () => {
@@ -125,9 +197,9 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
 
                     {
                         updatedDate && (
-                            <div class="text-subText text-md stats updated  px-7 font-mono capitalize">
+                            <div class="text-subText text-sm stats updated px-7 font-sans capitalize">
                                 <i class="ri-history-line text-link" />
-                                <span>
+                                <span class = "italic">
                                     Modified:
                                     <FormattedDate date={updatedDate} />
                                 </span>

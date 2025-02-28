@@ -12,7 +12,7 @@
     "dropdown.background": "#000000",
     "diffEditor.insertedTextBackground": "#00809B33",
     "dropdown.border": "#181A1F",
-    "editor.background": "#000000",
+    "editor.background": "hsl(240, 3%, 8%)",
     "editorError.foreground": "#c24038",
     "editorMarkerNavigation.background": "#21252b",
     "editorRuler.foreground": "#AAB1C026",
