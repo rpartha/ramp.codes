@@ -10,7 +10,10 @@ const { post } = Astro.props;
 const readingTime = getReadingTime(post.body);
 ---
 
-<span class ="text-subText">
-    <i class="text-link ri-time-line"></i>
-    {readingTime}
-</span>
+{
+  readingTime && (
+      <span class ="text-subText">
+          <i class="text-link ri-time-line"></i>&nbsp;{readingTime}
+      </span>
+  )
+}

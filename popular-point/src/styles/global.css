@@ -20,7 +20,6 @@
 }
 
 /* Custom fonts */
-/* Custom fonts */
 @font-face {
   font-family: "PP Mori";
   font-style: normal;
@@ -346,6 +345,15 @@ html {
     @apply relative h-full w-full text-body font-sans;
     @apply before:absolute before:inset-0 before:-z-10 before:bg-[linear-gradient(transparent,transparent_15px,#e5e7eb_15px,#e5e7eb_16px),linear-gradient(90deg,transparent,transparent_15px,#e5e7eb_15px,#e5e7eb_16px)];
     @apply before:[background-size:16px_16px] bg-[#f5f5f5];
+    @apply before:[mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] before:[mask-size:cover];
+  }
+}
+
+@layer utilities {
+  .custom-bg-dark {
+    @apply relative h-full w-full text-body font-sans;
+    @apply before:absolute before:inset-0 before:-z-10 before:bg-[linear-gradient(transparent,transparent_15px,#1a1a1a_15px,#1a1a1a_16px),linear-gradient(90deg,transparent,transparent_15px,#1a1a1a_15px,#1a1a1a_16px)];
+    @apply before:[background-size:16px_16px] bg-[#000000];
     @apply before:[mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] before:[mask-size:cover];
   }
 }

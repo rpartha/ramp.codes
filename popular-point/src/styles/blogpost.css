@@ -137,7 +137,7 @@ pre > code {
   font-size: 0.9rem;
   width: 100%;
   box-sizing: border-box;
-  padding-right: 1rem;
+  padding-right: 0rem;
   /* Add padding for scrollbar */
 }
 
@@ -218,8 +218,8 @@ code > span[data-highlighted-line-id="addWithSpace"] > span:first-child {
 
 code > span[data-highlighted-line-id="add"],
 code > span[data-highlighted-line-id="addWithSpace"] {
-  background-color: #293c24;
-  border-color: #89ca78;
+  background-color: #1a472a;
+  border-color: #44ba6e;
 }
 
 code > span[data-highlighted-line-id="point"] {
@@ -235,7 +235,7 @@ code > span[data-highlighted-line-id="remove"] {
 code > span[data-highlighted-line-id="add"]::before,
 code > span[data-highlighted-line-id="addWithSpace"]::before {
   font-size: 0.9rem;
-  color: #89ca78;
+  color: #44ba6e;
   content: "+";
 }
 

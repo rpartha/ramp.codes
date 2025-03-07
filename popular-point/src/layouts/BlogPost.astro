@@ -166,10 +166,17 @@ const { title, description, pubDate, updatedDate, author } = Astro.props;
         <div class="max-w-prose w-full py-12">
                 <div class="">
                     <div class="">
-                        <a href="/notebook"><i
-                                class="ri-arrow-left-line text-body ri-xl back"
-                            ></i>
-                        </a>
+                        <div class="flex items-center justify-between mb-4">
+                            <a href="/notebook"><i
+                                    class="ri-arrow-left-line text-body ri-xl back"
+                                ></i>
+                            </a>
+                            <div class="flex items-center">
+                                <button id="theme-toggle" class="rounded">
+                                    <i id="theme-icon" class="ri-settings-2-line ri-lg"></i>
+                                </button>
+                            </div>
+                        </div>
                         <h1 class="font-serif mt-1 text-link">
                             <span class="text-xl">{title}</span>
                         </h1>

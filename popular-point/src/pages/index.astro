@@ -1,16 +1,18 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { getRecommendedPosts } from '../utils/recommondations';
 import { getCollection } from 'astro:content';
 import HomeStat from '../components/HomeStat.astro';
 import PostList from '../components/PostList.astro';
 import Footer from '../components/Footer.astro';
 
-const posts = (
-    await getCollection('blog', ({ data }) => {
-        return data.draft !== true;
-    })
-).sort((a, b) => -(a.data.pubDate.valueOf() - b.data.pubDate.valueOf()));
+const allPosts = await getCollection('blog', ({ data }) => {
+    return data.draft !== true;
+});
+
+// For homepage recommendations (no current post)
+const recommendedPosts = getRecommendedPosts(allPosts, null, 4);
 
 const diamondPositions = [
   'top-[-12px] left-[-8px]',
@@ -51,7 +53,7 @@ const stats = [
   {
       icon: "ri-book-marked-line",
       name: "Last Read",
-      descr: "<em>Salvation of a Saint</em>, Keigo Higashino"
+      descr: "<em>Malice</em>, Keigo Higashino"
   },
 ];
 ---
@@ -67,7 +69,12 @@ const stats = [
             <div class="card max-w-4xl w-full mx-auto bg-white rounded-lg overflow-hidden">
                 <div class="p-6 sm:p-8 md:p-10 lg:p-12">
                     <div class="flex items-center justify-between mb-4">
-                        <img src="/logo/rp-logo_line.svg" alt="Logo" class="w-8 h-8 object-contain" />
+                        <img src="/logo/rp-logo_line.svg" alt="Logo" class="w-6 h-6 object-contain" />
+                        <div class="flex items-center">
+                            <button id="theme-toggle" class="rounded">
+                                <i id="theme-icon" class="ri-settings-2-line ri-lg"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <h1 class="font-serif font-medium text-xl text-link mb-4">
@@ -116,7 +123,7 @@ const stats = [
                     <section class="group relative mt-4">
                         <ul class="space-y-4">
                             {
-                              posts.slice(0, 4).map((post) =>
+                              recommendedPosts.map((post) =>
                                 <PostList post={post} />
                               )
                             }
