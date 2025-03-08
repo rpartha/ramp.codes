@@ -59,12 +59,19 @@ importers:
       stopword:
         specifier: ^3.1.4
         version: 3.1.4
+      stopwords:
+        specifier: ^0.0.9
+        version: 0.0.9
       tailwindcss:
         specifier: ^3.3.6
         version: 3.4.17
       typescript:
         specifier: ^5.3.3
         version: 5.7.3
+    devDependencies:
+      '@types/stopword':
+        specifier: ^2.0.3
+        version: 2.0.3
 
 packages:
 
@@ -1015,6 +1022,9 @@ packages:
 
   '@types/sax@1.2.7':
     resolution: {integrity: sha512-rO73L89PJxeYM3s3pPPjiPgVVcymqU490g0YO5n5By0k2Erzj6tay/4lr1CHAAU4JyOWd1rpQ8bCf6cZfHU96A==}
+
+  '@types/stopword@2.0.3':
+    resolution: {integrity: sha512-hioMj0lOvISM+EDevf7ijG8EMbU+J3pj4SstCyfQC1t39uPYpAe7beSfBdU6c1d9jeECTQQtR3UJWtVoUO8Weg==}
 
   '@types/trusted-types@2.0.7':
     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
@@ -3086,6 +3096,9 @@ packages:
     resolution: {integrity: sha512-I6GPS/E0zyieHehMRPQcqkiBMJKGgLta+1hREixhoLPqEA0AlVFiC43dl8uPpmkkeRdDMzYRWFWk5/l9x7nmNg==}
     engines: {node: '>=0.10.0'}
 
+  stopwords@0.0.9:
+    resolution: {integrity: sha512-2OF7/9f5buXrBB8De5ZAC9+g5nIw9SRx9ZsL3Qpz6znSfPEihOmaMnwJxXehynZ9AfRNroHIKEIcsEmRywVXVQ==}
+
   stream-replace-string@2.0.0:
     resolution: {integrity: sha512-TlnjJ1C0QrmxRNrON00JvaFFlNh5TTG00APw23j74ET7gkQpTASi6/L2fuiav8pzK715HXtUeClpBTw2NPSn6w==}
 
@@ -4599,6 +4612,8 @@ snapshots:
   '@types/sax@1.2.7':
     dependencies:
       '@types/node': 17.0.45
+
+  '@types/stopword@2.0.3': {}
 
   '@types/trusted-types@2.0.7':
     optional: true
@@ -7286,6 +7301,8 @@ snapshots:
   stopword@3.1.4: {}
 
   stopwords-iso@1.1.0: {}
+
+  stopwords@0.0.9: {}
 
   stream-replace-string@2.0.0: {}
 

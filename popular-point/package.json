@@ -27,7 +27,11 @@
     "rehype-external-links": "^3.0.0",
     "rehype-pretty-code": "^0.13.0",
     "stopword": "^3.1.4",
+    "stopwords": "^0.0.9",
     "tailwindcss": "^3.3.6",
     "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/stopword": "^2.0.3"
   }
 }
