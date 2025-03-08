@@ -52,4 +52,6 @@ const { title, description } = Astro.props;
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 
-<script type="module" src="/src/utils/toggle-theme.ts"></script>
+<script type="module">
+  import '/src/utils/toggle-theme.ts';
+</script>
