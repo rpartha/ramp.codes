@@ -14,7 +14,7 @@ const { post, customCss } = Astro.props;
 <li class={`mb-2${customCss ? customCss : ''}`}>
    <a
       href={`/notebook/${post.slug}/`}
-      class="block text-sm font-sans text-black underline"
+      class="block text-sm font-sans text-link underline"
       >
    {post.data.title}
    </a>
