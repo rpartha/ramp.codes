@@ -61,7 +61,7 @@ export default {
           "--color-body": "rgba(0, 33, 33, 1)",
           "--color-teal": "#004d4d",
           "--color-header": "#000a3a",
-          "--color-subHeader": "#777777",
+          "--color-subHeader": "#4d5475",
           "--color-subText": "#818181",
           "--color-infoBorder": "#699ab2",
           "--color-infoIcon": "#96ddff",
