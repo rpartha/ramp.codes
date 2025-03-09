@@ -93,7 +93,7 @@ export default {
           "--color-ideaBorder": "#b2a569",
           "--color-boxBG": "#000000",
           "--color-action": "#00274d",
-          "--color-link": "#B2B5C3",
+          "--color-link": "#878ca1",
           "--color-subLink": "#3a00ff",
           "--color-glacier": "#c5c6c7",
           "--color-redir": "#999db0",
