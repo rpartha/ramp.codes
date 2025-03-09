@@ -84,7 +84,7 @@ export default {
           "--color-body": "#D4D4D8",
           "--color-teal": "#004d4d",
           "--color-header": "#E4E4E7", // Changed for dark mode
-          "--color-subText": "#D4D4D8",
+          "--color-subText": "#c1c3cf",
           "--color-infoBorder": "#699ab2",
           "--color-infoIcon": "#96ddff",
           "--color-ideaIcon": "#ffed96",

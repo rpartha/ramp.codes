@@ -1,3 +1,9 @@
+.dark h2,
+.dark h3,
+.dark h4 {
+  color: #e4e4e7;
+}
+
 h1,
 h2,
 h3,
@@ -48,6 +54,10 @@ ul:not(#privacyModal ul):not(.sublist) {
   text-justify: newspaper;
   padding-left: 3.5rem;
   padding-top: 1%;
+}
+
+.dark p:not(#privacyModal p):not(#box) {
+  color: #d4d4d8;
 }
 
 p:not(#privacyModal p):not(#box) {
