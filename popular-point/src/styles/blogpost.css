@@ -1,7 +1,7 @@
 .dark h2,
 .dark h3,
 .dark h4 {
-  color: #e4e4e7;
+  color: #f6f8fa;
 }
 
 h1,
@@ -57,7 +57,7 @@ ul:not(#privacyModal ul):not(.sublist) {
 }
 
 .dark p:not(#privacyModal p):not(#box) {
-  color: #d4d4d8;
+  color: #e9eef3;
 }
 
 p:not(#privacyModal p):not(#box) {
@@ -177,6 +177,13 @@ td > code {
   background-color: #dddddd;
   padding-right: 0.2rem;
   padding-left: 0.2rem;
+}
+
+.dark p > code,
+.dark li > code,
+.dark em > code,
+.dark td > code {
+  background-color: #f3eee9;
 }
 
 figure [data-rehype-pretty-code-title] {

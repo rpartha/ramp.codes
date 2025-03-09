@@ -5,13 +5,13 @@
     <g>
         <!-- Outline-only shapes with brighter blue colors for dark backgrounds -->
         <rect x="1216.12" y="1407.78" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -653.2947 1306.1385)"
-              fill="none" stroke="#0042d3" stroke-width="10" width="67.77" height="67.77"></rect>
+              fill="none" stroke="#6366f1" stroke-width="10" width="67.77" height="67.77"></rect>
 
-        <polygon fill="none" stroke="#0042d3" stroke-width="10"
+        <polygon fill="none" stroke="#6366f1" stroke-width="10"
                 points="1297.92,1345.82 1250,1393.74 1202.08,1345.82 1154.16,1393.74 1106.25,1345.83 1154.17,1297.92
                 1202.09,1249.99"></polygon>
 
-        <polygon fill="none" stroke="#0042d3" stroke-width="10"
+        <polygon fill="none" stroke="#6366f1" stroke-width="10"
                 points="1489.59,1249.99 1441.67,1297.92 1393.75,1345.83 1345.84,1393.74 1297.92,1345.82 1345.83,1297.92
                 1393.75,1249.99 1345.83,1202.07 1297.92,1154.17 1250,1106.24 1202.08,1154.17 1154.17,1202.07 1106.25,1249.99 1058.33,1297.92
                 1010.41,1249.99 1058.33,1202.07 1106.25,1154.17 1154.16,1106.24 1202.08,1058.32 1250,1010.42 1297.92,1058.32 1345.84,1106.24
