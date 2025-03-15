@@ -1,0 +1,15 @@
+---
+interface Props {
+    boxText: String;
+}
+const { boxText } = Astro.props;
+---
+
+<div class="note bg-boxBG border-l-[0.45em] border-ideaBorder px-2 py-2 mb-3 shadow-md rounded" role="alert">
+  <div class="flex">
+    <div class="py-1 inline-flex items-center flex-row">
+     <!--<i class="ri-lightbulb-line ri-1x text-ideaIcon"></i>-->
+     <p id = "box" class="font-sans font-semibold text-sm text-ideaIcon content-center">{boxText}</p>
+   </div>
+  </div>
+</div>

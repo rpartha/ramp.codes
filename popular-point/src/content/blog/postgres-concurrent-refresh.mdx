@@ -1,0 +1,239 @@
+---
+title: "Postgres: Concurrent Refresh"
+description: "How to implement Concurrent Refresh for Materialized Views"
+pubDate: "Feb 01 2025"
+author: Ram
+draft: false
+tags: ["postgresql", "database", "backend", "performance", "sql", "engineering"]
+category: "database"
+---
+
+import InfoBox from '../../components/InfoBox.astro';
+import Collapsible from '../../components/Collapsible.astro';
+
+## Happy New Year
+
+I realize it's been a long time since I last posted, and I wanted to start the new
+year off right with a good post based on an experience I encountered. I'll try to
+post sort of regularly going forward. Hope this post will yield useful insight!
+
+## A Friendly Recap
+
+When working with databases, it's a common need to repeatedly access data
+through complex `SELECT` queries. Most RDBMS offer convenient ways to accomplish this:
+_views_ and _materialized views_. Let's go over the differences between the two,
+and when to use them.
+
+### Views
+
+A _view_ is essentially a stored query that, for all intents and purposes, can be
+treated as a "regular" table. You, as the developer, define a query that gets executed
+every time the view is accessed. This means that the data that comes back is always
+fresh and reflects changes made to the tables within. In practice, especially when
+operating on large datasets, you will learn that this is quite expensive since the
+underlying query gets executed every single time.
+
+Imagine a table called `t_orders` that tracks the sales of an ecommerce site:
+
+<div class="tbl overflow-x-auto">
+  <table class="db-tbl border-collapse border border-gray-200 text-subText">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="px-4 py-2 border border-gray-300 text-left font-bold">id</th>
+        <th class="px-4 py-2 border border-gray-300 text-left font-bold">
+          customer_id
+        </th>
+        <th class="px-4 py-2 border border-gray-300 text-left font-bold">
+          order_date
+        </th>
+        <th class="px-4 py-2 border border-gray-300 text-left font-bold">
+          total_amount
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="px-4 py-2 border border-gray-300">1</td>
+        <td class="px-4 py-2 border border-gray-300">1</td>
+        <td class="px-4 py-2 border border-gray-300">2024-11-01</td>
+        <td class="px-4 py-2 border border-gray-300">$150.00</td>
+      </tr>
+      <tr class="bg-gray-50">
+        <td class="px-4 py-2 border border-gray-300">2</td>
+        <td class="px-4 py-2 border border-gray-300">2</td>
+        <td class="px-4 py-2 border border-gray-300">2024-11-02</td>
+        <td class="px-4 py-2 border border-gray-300">$200.00</td>
+      </tr>
+      <tr>
+        <td class="px-4 py-2 border border-gray-300">3</td>
+        <td class="px-4 py-2 border border-gray-300">3</td>
+        <td class="px-4 py-2 border border-gray-300">2024-11-03</td>
+        <td class="px-4 py-2 border border-gray-300">$50.00</td>
+      </tr>
+      <tr class="bg-gray-50">
+        <td class="px-4 py-2 border border-gray-300">4</td>
+        <td class="px-4 py-2 border border-gray-300">1</td>
+        <td class="px-4 py-2 border border-gray-300">2024-11-03</td>
+        <td class="px-4 py-2 border border-gray-300">$300.00</td>
+      </tr>
+      <tr>
+        <td class="px-4 py-2 border border-gray-300">5</td>
+        <td class="px-4 py-2 border border-gray-300">2</td>
+        <td class="px-4 py-2 border border-gray-300">2024-11-04</td>
+        <td class="px-4 py-2 border border-gray-300">$100.00</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+We could create a standard view based on this data called `vw_customer_orders` that
+calculates the total price of all orders a customer has made:
+
+```sql title="vw_customer_orders.sql" {1-2}#point
+  DROP VIEW IF EXISTS vw_customer_orders;
+  CREATE OR REPLACE VIEW vw_customer_orders AS
+  SELECT
+      customer_id,
+      COUNT(*) AS total_orders,
+      SUM(total_amount) AS total_spent
+  FROM
+    t_orders
+  GROUP BY
+    customer_id;
+```
+
+<InfoBox boxText = "Be mindful when replacing views as it may break dependent entities such as stored procedures or other views."/>
+
+### Materialized Views
+
+This is where _materialized views_ come in handy. The database does not need to recalculate
+the results during each query since the query results are instead stored on disk, making
+them **much faster to query**. However, there is one caveat -- the data in these views,
+as compared to standard views, don't automatically update even if the underlying table data
+changes. That means the materialized view can become outdated, forcing the user to manually
+refresh the view. Manual refreshes are not feasible for any system.
+
+```sql title="mv_customer_orders.sql" {1-2}#add
+  DROP VIEW IF EXISTS mv_customer_orders;
+  CREATE MATERIALIZED VIEW mv_customer_orders AS
+  SELECT
+      customer_id,
+      COUNT(*) AS total_orders,
+      SUM(total_amount) AS total_spent
+  FROM
+    t_orders
+  GROUP BY
+    customer_id;
+```
+
+#### Standard Refresh
+
+So, how do you keep materialized views, such as the one above, up to date? You can use the
+`REFRESH MATERIALIZED VIEW` command to recalculate and reload the data. Rather than executing
+this command manually, a scheduler that runs every _m_ minutes could potentially do this for you.
+Below is a snippet of what this looks like in a Spring Boot application.
+
+```java title="MVRefreshScheduler.java" {13}#point
+public class MVRefreshScheduler {
+  @Autowired
+  private UtilRepository utilRepository;
+
+  @Scheduled(cron = "*/m * * * *")
+  public void refreshMV() {
+    if (!schedulerEnabled) {
+      log.warn("MVRefreshScheduler not enabled");
+      return;
+    }
+
+    try {
+      utilRepository.callRefresh();
+    } catch (Exception e) {
+      log.error(e);
+    }
+  }
+}
+```
+
+#### Uh-Oh!
+
+However, we still run into a potential roadblock -- **this operation locks the materialized view
+for the duration of the refresh**, which means users can't access anything that depends on that
+view. I've encountered a scenario where clients accessing a certain screen triggers a deadlock
+as the data that populates that screen depends on the materialized view. This spells trouble for
+high-availability systems, but rest asssured, we will explore in this post what we can do to avoid
+this particular pitfall.
+
+<InfoBox boxText = "Remember that a refresh can occur once for a materialized view at any given time."/>
+
+<Collapsible collapseTitle = "Aside: Identifying Deadlocks" customCss = " pl-[1.5rem] pt-5 text-sm">
+    It would probably be useful to identify the locks from the DB itself. Below is a nifty little query that does exactly that:
+
+    ```sql title="do_locks_exist.sql"
+    SELECT EXISTS (
+    SELECT
+        1
+    FROM
+        pg_stat_activity ps
+        JOIN pg_locks pl on ps.pid = pl.pid
+    WHERE
+        pl.relation = 'schema.my_table'::regclass
+        AND NOT pl.granted
+        AND ps.datname = current_database();
+    );
+    ```
+</Collapsible>
+
+## The "Hack"
+
+The query alone obviously isn't helpful, so we can "hack" a solution - something that I quickly
+cobbled up together to patch this issue. All that needs to be done is to duplicate the view and
+treat the duplicate as a backup in case the primary view fails. Now here me out -- this is far
+from the ideal solution -- but it works to a good extent. At the time, we settled for this work-around
+as upgrades on our servers were interfering with our judgement. Hence, we settled for the most basic approach.
+
+With this approach, one need simply check if there exists a lock on the view. The implementation of
+the `doesViewContainLock()` method is given above.
+
+```java title="MVRefreshScheduler.java" {13}#remove {14-18}#add
+public class MVRefreshScheduler {
+  @Autowired
+  private UtilRepository utilRepository;
+
+  @Scheduled(cron = "*/m * * * *")
+  public void refreshMV() {
+    if (!schedulerEnabled) {
+      log.warn("MVRefreshScheduler not enabled");
+      return;
+    }
+
+    try {
+      utilRepository.callRefresh();
+      if (utilRepository.doesViewContainLock("schema.mv_primary")) {
+        utilRepository.callRefreshBackup();
+      } else {
+        utilRepository.callRefreshPrimary();
+      }
+    } catch (Exception e) {
+      log.error(e);
+    }
+  }
+}
+```
+
+## Show Me The <em class = "font-serif">Real</em> Solution
+
+What if I told you there was a way to access the materialized view while it was still being
+refreshed? Postgres allows the `REFRESH MATERIALIZED VIEW [CONCURRENTLY]` option whose sole purpose
+is to allow allow the materialized view to remain accessible for reads during the refresh process.
+The single prerequisite is that the materialized view requires a `UNIQUE` index on it. You could even
+schedule these refreshes just as we did the standard refresh.
+
+<InfoBox boxText = "Concurrent refreshes will be faster than standard refreshes for a smaller record size but is in general slow since it requires more system resources to maintain consistency."/>
+
+## Remarks
+
+PostgreSQL's materialized views can really boost performance in applications that handle a
+lot of data. But to get the most out of them, it's important to use the `REFRESH MATERIALIZED
+VIEW [CONCURRENTLY]` command effectively. Even with automated solutions as described, (1) there
+is still some overhead in maintaining the scheduler job, and (2) there will be stale data
+between refreshes.

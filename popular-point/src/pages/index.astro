@@ -1,0 +1,144 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { getRecommendedPosts } from '../utils/recommondations';
+import { getCollection } from 'astro:content';
+import HomeStat from '../components/HomeStat.astro';
+import PostList from '../components/PostList.astro';
+import Footer from '../components/Footer.astro';
+
+const allPosts = await getCollection('blog', ({ data }) => {
+    return data.draft !== true;
+});
+
+// For homepage recommendations (no current post)
+const recommendedPosts = getRecommendedPosts(allPosts, null, 4);
+
+const diamondPositions = [
+  'top-[-12px] left-[-8px]',
+  'top-[-12px] right-[-8px]',
+  'bottom-[-11px] left-[-8px]',
+  'bottom-[-11px] right-[-8px]'
+];
+
+const stats = [
+  {
+    icon: "ri-map-pin-2-line",
+    name: "Location",
+    descr: "Chesterfield, NJ"
+  },
+  {
+      icon: "ri-command-line",
+      name: "Tools",
+      descr: "IntelliJ IDEA Ultimate, Zed"
+  },
+  {
+      icon: "ri-tools-line",
+      name: "Workstation Setup",
+      descr: "<i class='text-asus ri-computer-line ri-md mr-1'></i>ASUS ProArt PA279CRV</br>" +
+             "<i class='text-finder ri-finder-line ri-md mr-1'></i>M4 Mac mini, M1 Macbook Air</br>" +
+             "<i class='text-oneplusk ri-keyboard-box-line ri-md mr-1'></i>Keychron 81 Pro</br>" +
+             "<i class='text-glacier ri-add-box-line ri-md mr-1'></i>TTC Silent Glacier V2"
+  },
+  {
+      icon: "ri-sparkling-line",
+      name: "Affiliations",
+      descr: "麦わら大船団/Hufflepuff"
+  },
+  {
+      icon: "ri-fire-line",
+      name: "Passions",
+      descr: "Travel, Hiking, Watches, Figurines"
+  },
+  {
+      icon: "ri-book-marked-line",
+      name: "Last Read",
+      descr: "<em>Malice</em>, Keigo Higashino"
+  },
+];
+---
+<!doctype html>
+<html lang="en">
+    <head>
+        <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+
+    <body class="custom-bg no-select">
+        <div class="content flex min-h-screen flex-col justify-center items-center px-4 sm:px-6 md:px-8 lg:px-12">
+            <div class="card max-w-4xl w-full mx-auto rounded-lg overflow-hidden">
+                <div class="p-6 sm:p-8 md:p-10 lg:p-12">
+                    <div class="flex items-center justify-between mb-4">
+                        <img src="/logo/rp-logo_line.svg" alt="Logo" class="w-8 h-8 object-contain" />
+                        <div class="flex items-center">
+                            <button id="theme-toggle" class="rounded">
+                                <i id="theme-icon" class="ri-settings-2-line ri-xl text-link"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <h1 class="font-serif font-medium text-xl text-header mb-4">
+                        Hi there, I'm Ram!
+                    </h1>
+
+                    <p class="text-justify font-sans text-sm text-body leading-snug mb-2">
+                        I'm currently pursuing a <em class="font-serifItalic">Master's in Computer Science</em> with a specialization in
+                        <em class="font-serifItalic"> Artificial Intelligence</em> at <span class="border-b-2 border-dashed border-redir text-redir font-bold"><a href="https://colorado.edu">UC Boulder</a></span> while working as a senior full-stack engineer at
+                        <span class="border-b-2 border-dashed border-redir text-redir font-bold"><a href="https://www.dtcc.com">DTCC</a></span>. I'm currently focused on building innovative, back-end heavy solutions within the Spring Boot-Angular-Postgres stack for our
+                        self-service orchestration framework called SSP to automate various dev team workflows.<br/><br/> Beyond my technical endeavors,
+                        I am very fortunate to have practiced Tabla for nearly 15 years (and counting) under the mentorship of Guru Dr. Pratik Devasthale.
+                        This journey culminated in earning a Visharad Purna, equivalent to a Bachelor's in Music. I have also embraced the role of a teacher,
+                        sharing my love for music with students from my home for the past two years.
+                        <br/><br/> Explore my site and connect with me — innovation grows through collaboration!
+                    </p>
+
+                    <div class="relative mb-4 mt-4 translate-x-[0.275rem]">
+                        {
+                          diamondPositions.map((position) =>
+                            <i class={`ri-poker-diamonds-line absolute ${position} text-diamond`}></i>
+                          )
+                        }
+
+                        <div class="border-content border border-homeBorder p-5 md:ml-0 md:mr-0">
+                            <div class="grid grid-cols-1 gap-4">
+                                {
+                                  stats.map((stat, index) =>
+                                    <fragment>
+                                        <HomeStat icon={stat.icon} stat={stat.name} descr={stat.descr} customCss={index < stats.length - 1 ? 'pb-4' : ''}/>
+                                        {
+                                          index < stats.length - 1 && <hr style="border: none; border-top: 1px solid #c0c0c0;">
+                                        }
+                                    </fragment>
+                                  )
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-xl text-header font-serif mb-2">Fresh Entries</h2>
+                    <p class="font-sans text-subText text-sm leading-snug mb-4">
+                        I occasionally like to write about stuff.
+                    </p>
+
+                    <section class="group relative mt-4">
+                        <ul class="space-y-4">
+                            {
+                              recommendedPosts.map((post) =>
+                                <PostList post={post} />
+                              )
+                            }
+                        </ul>
+                        <a href="/notebook" class="text-redir text-sm mt-4 inline-block font-sans">
+                            <span>Notebook</span>
+                            <i class="ri-arrow-right-line"></i>
+                        </a>
+                    </section>
+
+                    <div id="squig" style="--mask: radial-gradient(0.39999999999999997rem at 50% calc(100% + 0.18rem),#0000 calc(99% - 0.1rem),#000 calc(101% - 0.1rem) 99%,#0000 101%) calc(50% - 0.6rem) calc(50% - 0.2rem + .5px)/1.2rem 0.4rem repeat-x,
+                        radial-gradient(0.39999999999999997rem at 50% -0.18rem,#0000 calc(99% - 0.1rem),#000 calc(101% - 0.1rem) 99%,#0000 101%) 50% calc(50% + 0.2rem)/1.2rem 0.4rem repeat-x;"></div>
+                    <Footer customCss=" items-center"/>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

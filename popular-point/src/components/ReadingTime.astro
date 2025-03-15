@@ -1,0 +1,19 @@
+---
+import { getReadingTime } from '../utils/reading-time';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+    post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const readingTime = getReadingTime(post.body);
+---
+
+{
+  readingTime && (
+      <span class ="text-subText">
+          <i class="text-link ri-time-line"></i>&nbsp;{readingTime}
+      </span>
+  )
+}

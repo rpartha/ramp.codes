@@ -1,0 +1,65 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import { getCollection } from 'astro:content';
+import PostList from '../../components/PostList.astro';
+import Footer from '../../components/Footer.astro';
+
+const posts = (
+    await getCollection('blog', ({ data }) => {
+        return data.draft !== true;
+    })
+).sort((a, b) => -(a.data.pubDate.valueOf() - b.data.pubDate.valueOf()));
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+
+    <body class="custom-bg no-select">
+        <div class="flex min-h-screen items-center justify-center px-4 sm:px-6 lg:px-8">
+            <!-- Content Wrapper -->
+            <div class="content flex min-h-screen flex-col justify-center">
+                <!-- Card or contents that should be centered vertically -->
+                <div class="card max-w-screen-md mx-auto rounded-lg px-6 py-8 sm:px-10 sm:py-12 bg-opacity-90 bg-gray-800">
+                    <!-- Back Link -->
+                    <div class="flex items-center mb-1">
+                        <a href="/" class="text-link text-2xl mr-2">
+                            <i class="ri-arrow-left-line"></i>
+                        </a>
+                        <span class="font-serif text-header text-3xl">
+                            Notebook
+                        </span>
+                        <div class="ml-auto">
+                            <button id="theme-toggle" class="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">
+                                <i id="theme-icon" class="ri-settings-2-line ri-xl text-link"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <h4 class="text-subText px-8 mb-2 font-sans text-sm leading-snug">
+                        A place to share thoughts and ideas.
+                    </h4>
+                    <!-- Posts Section -->
+                    <section class="group relative py-2 px-4">
+                        <ul class="space-y-4">
+                            {
+                              posts.map((post) => (<PostList post={post} customCss=" ml-4"/>))
+                            }
+                        </ul>
+                    </section>
+
+                    <div id="squig" style="--mask: radial-gradient(0.39999999999999997rem at 50% calc(100% + 0.18rem),#0000 calc(99% - 0.1rem),#000 calc(101% - 0.1rem) 99%,#0000 101%) calc(50% - 0.6rem) calc(50% - 0.2rem + .5px)/1.2rem 0.4rem repeat-x,
+                        radial-gradient(0.39999999999999997rem at 50% -0.18rem,#0000 calc(99% - 0.1rem),#000 calc(101% - 0.1rem) 99%,#0000 101%) 50% calc(50% + 0.2rem)/1.2rem 0.4rem repeat-x;"></div>
+
+                    <!-- Footer -->
+                    <Footer customCss=" items-center" />
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,224 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/blogpost.css';
+
+type Props = CollectionEntry<'blog'>['data'];
+const { title, description, pubDate, updatedDate, author } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <BaseHead title={title} description={description} />
+
+        <script>
+            const EXTENSION_MAP: Record<string, string> = {
+                javascript: 'js',
+                typescript: 'ts',
+                java: 'java',
+                sql: 'sql',
+                html: 'html',
+                css: 'css',
+                mermaid: 'mermaid',
+                bash: 'sh',
+                python: 'py',
+            };
+
+            let copyButtonIcon = '<i class="ri-file-copy-line ri-xl text-copy flex max-sm:hidden"></i>';
+            let downloadButtonIcon = '<i class="ri-download-2-line ri-xl text-copy flex max-sm:hidden"></i>';
+
+            let codeBlocks = Array.from(document.querySelectorAll('pre'));
+            let figCaptions = Array.from(
+                document.querySelectorAll('figcaption'),
+            );
+            let headers = Array.from(document.querySelectorAll('h1:not(#privacyModal h1), h2:not(#privacyModal h2), h3:not(#privacyModal h3), h4:not(#privacyModal h4)'));
+            let progressBar = document.getElementById('progress-bar');
+
+            // Dynamically color the headers
+            headers.forEach(header => {
+              if (header.tagName.toLowerCase() !== 'h1') {
+                header.classList.add('pt-4', 'olg:pt-3');
+              }
+            });
+
+            for (let [index, codeBlock] of codeBlocks.entries()) {
+                let figCaption = figCaptions.at(index);
+
+                let wrapper = document.createElement('div');
+                wrapper.style.position = 'relative';
+
+                let copyButton = document.createElement('button');
+                copyButton.className = 'copy-code';
+                copyButton.innerHTML = copyButtonIcon;
+
+                let downloadButton = document.createElement('button');
+                downloadButton.className = 'download-code';
+                downloadButton.innerHTML = downloadButtonIcon;
+
+                if (figCaption !== undefined) {
+                  figCaption.setAttribute('tabindex', '0');
+
+                  figCaption.appendChild(copyButton);
+                  figCaption.appendChild(downloadButton);
+
+                  // wrap codebock with relative parent element
+                  codeBlock?.parentNode?.insertBefore(wrapper, figCaption);
+                  wrapper.appendChild(figCaption);
+
+                  const language = figCaption.getAttribute('data-language') || 'txt';
+
+                  copyButton.addEventListener('click', async () => {
+                      await copyCode(codeBlock, copyButton);
+                  });
+
+                  downloadButton.addEventListener('click', async () => {
+                      await downloadCode(codeBlock, downloadButton, language);
+                  });
+                }
+            }
+
+            async function copyCode(block:any, button:any) {
+                let text = getText(block);
+                await navigator.clipboard.writeText(text);
+
+                const originalIcon = button.innerHTML;
+                button.innerHTML = '<i class="ri-check-line ri-xl text-copy flex max-sm:hidden"></i>';
+
+                setTimeout(() => {
+                    button.innerHTML = originalIcon;
+                }, 700);
+            }
+
+            async function downloadCode(block: any, button: any, language: string) {
+                let figCaption = block.parentNode.querySelector('figcaption');
+                let text = getText(block);
+
+                // Create file extension based on language
+                let filename = figCaption.childNodes[0].textContent.trim();
+
+                // If no filename is found, fallback to default with correct extension
+                if (!filename) {
+                    const fileExtension = getFileExtension(language);
+                    filename = `code.${fileExtension}`;
+                }
+
+                // Create blob and download
+                const blob = new Blob([text], { type: 'text/plain' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+
+                // Visual feedback
+                const originalIcon = button.innerHTML;
+                button.innerHTML = '<i class="ri-check-line ri-xl text-copy flex max-sm:hidden"></i>';
+
+                setTimeout(() => {
+                    button.innerHTML = originalIcon;
+                }, 700);
+            }
+
+            function getText(block: any) {
+              let rawMermaid = block.getAttribute("data-raw-mermaid");
+
+              if (rawMermaid) {
+                return rawMermaid;
+              } else {
+                let code = block.querySelector('code');
+
+                // Get all text lines except those marked for removal
+                let lines = Array.from(code.querySelectorAll('span[data-line]'))
+                    .filter((span:any) => !span.hasAttribute('data-highlighted-line-id') ||
+                                    span.getAttribute('data-highlighted-line-id') !== 'remove')
+                    .map((span:any) => span.innerText);
+
+                // Join the filtered lines
+                return lines.join('\n');
+              }
+            }
+
+            function getFileExtension(language: string): string {
+              return EXTENSION_MAP[language.toLowerCase()] || 'txt';
+            }
+
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY; // Amount scrolled from the top
+                const windowHeight = document.documentElement.scrollHeight - window.innerHeight; // Total scrollable height
+                const scrollPercent = (scrollTop / windowHeight) * 100; // Calculate scroll percentage
+                if (progressBar) {
+                  progressBar.style.width = scrollPercent + '%'; // Update progress bar width
+                }
+            });
+        </script>
+    </head>
+
+    <body class="custom-bg no-select">
+        <div id="progress-bar" class="fixed top-0 left-0 h-1 bg-link w-0 transition-all duration-100 ease-in-out z-50"></div>
+        <div class="flex min-h-screen items-center justify-center px-4 sm:px-6 lg:px-8">
+        <!-- Card or contents that should be centered -->
+        <div class="max-w-prose w-full py-12">
+                <div class="">
+                    <div class="">
+                        <div class="flex items-center justify-between mb-4">
+                            <a href="/notebook"><i
+                                    class="ri-arrow-left-line text-link ri-xl back"
+                                ></i>
+                            </a>
+                            <div class="flex items-center mr-[1rem]">
+                                <button id="theme-toggle" class="rounded">
+                                    <i id="theme-icon" class="ri-settings-2-line ri-lg text-link"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <h1 class="font-serif mt-1 text-header">
+                            <span class="text-xl">{title}</span>
+                        </h1>
+                    </div>
+                    <div class="text-subText text-sm stats px-7 font-sans">
+                        <span
+                            ><i class="ri-calendar-line text-link"></i>
+                            <FormattedDate date={pubDate} />
+                        </span>
+                        <span class = "text-black">·</span>
+                        <span>
+                            {
+                                author && author.includes(',') && (
+                                    <i class="ri-group-line text-link"></i>
+                                )
+                            }
+                            {
+                                author && !author.includes(',') && (
+                                    <i class="ri-user-line text-link"></i>
+                                )
+                            }
+                            {author}
+                        </span>
+                    </div>
+
+                    {
+                        updatedDate && (
+                            <div class="text-subText text-sm stats updated px-7 font-sans capitalize">
+                                <i class="ri-history-line text-link" />
+                                <span class = "italic">
+                                    Modified:
+                                    <FormattedDate date={updatedDate} />
+                                </span>
+                            </div>
+                        )
+                    }
+                </div>
+                <slot />
+                <div id="squig" style="--mask: radial-gradient(0.39999999999999997rem at 50% calc(100% + 0.18rem),#0000 calc(99% - 0.1rem),#000 calc(101% - 0.1rem) 99%,#0000 101%) calc(50% - 0.6rem) calc(50% - 0.2rem + .5px)/1.2rem 0.4rem repeat-x,
+                    radial-gradient(0.39999999999999997rem at 50% -0.18rem,#0000 calc(99% - 0.1rem),#000 calc(101% - 0.1rem) 99%,#0000 101%) 50% calc(50% + 0.2rem)/1.2rem 0.4rem repeat-x;margin-left:1.5rem;width:calc(100% - 3rem);"></div>
+                <Footer customCss=" items-center blog-footer" />
+            </div>
+        </div>
+    </body>
+</html>
