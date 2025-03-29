@@ -11,12 +11,12 @@ const { customCss } = Astro.props;
 
 const privacy = await getEntry('blog', 'privacy');
 if (!privacy) {
-    throw new Error('Privacy policy not found!');
+  console.log('Privacy Policy not found!');
+} else {
+  // Extract the frontmatter pubDate from the entry’s data
+  const { pubDate } = privacy.data;
+  const { Content } = await privacy.render();
 }
-
-// Extract the frontmatter pubDate from the entry’s data
-const { pubDate } = privacy.data;
-const { Content } = await privacy.render();
 ---
 <footer>
     <div class={`flex flex-row${customCss}`}>

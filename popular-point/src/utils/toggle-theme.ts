@@ -7,14 +7,14 @@ function setTheme(theme: "light" | "dark" | "system"): void {
   if (theme === "dark") {
     document.documentElement.classList.add("dark");
     document.body.classList.add("dark");
-    themeIcon.classList.replace("ri-sun-line", "ri-moon-clear-line");
-    themeIcon.classList.replace("ri-settings-2-line", "ri-moon-clear-line");
+    themeIcon.classList.replace("ri-moon-clear-line", "ri-sun-line");
+    themeIcon.classList.replace("ri-settings-2-line", "ri-sun-line");
     themeToggle.title = "Dark theme";
   } else if (theme === "light") {
     document.documentElement.classList.remove("dark");
     document.body.classList.remove("dark");
-    themeIcon.classList.replace("ri-moon-clear-line", "ri-sun-line");
-    themeIcon.classList.replace("ri-settings-2-line", "ri-sun-line");
+    themeIcon.classList.replace("ri-sun-line", "ri-moon-clear-line");
+    themeIcon.classList.replace("ri-settings-2-line", "ri-moon-clear-line");
     themeToggle.title = "Light theme";
   } else if (theme === "system") {
     const prefersDark = window.matchMedia(
