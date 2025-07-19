@@ -8,15 +8,6 @@ interface Props {
     customCss: String;
 }
 const { customCss } = Astro.props;
-
-const privacy = await getEntry('blog', 'privacy');
-if (!privacy) {
-  console.log('Privacy Policy not found!');
-} else {
-  // Extract the frontmatter pubDate from the entry’s data
-  const { pubDate } = privacy.data;
-  const { Content } = await privacy.render();
-}
 ---
 <footer>
     <div class={`flex flex-row${customCss}`}>

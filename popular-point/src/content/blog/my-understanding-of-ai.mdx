@@ -1,21 +1,62 @@
 ---
 title: "My Understanding of AI"
 description: "What I learned about AI so far."
-pubDate: "Mar 30 2025"
+pubDate: "July 07 2025"
 author: Ram
-draft: true
+draft: false
 tags: ["development", "ai", "llm", "blog", "personal", "learning"]
 category: "development"
 ---
 import Collapsible from '../../components/Collapsible.astro';
 
 I've spent a considerable amount of time learning about the intricacies of AI, and I want to share my insights
-with fellow engineers who are new to topics like large language models (LLMs), machine learning, generative AI, neural networks,
-and deep learning. In this post, I'll break down what I've learned and try to provide a clearer understanding of these topics.
+with fellow engineers who are new to topics like large language models (LLMs), machine learning, generative AI, neural networks, and deep learning. In this post, I'll break down what I've learned and try to provide a clear understanding of these topics.
 
-## Unpacking AI: What Is It Really About?
+## Unpacking AI
+
+AI is woven into our mundane lives — from the recommendation engine curating your social media
+feed to the algorithms powering Tesla's FSD and other self-driving cars — and you likely have
+not even realized it yet. So what exactly is it? At its core, AI is about teaching machines to
+recognize patterns, learn from data, and make decisions that once required human intuition.
+I prefer to think of it as a set of technologies that fundementally alters the way we as humans
+interact with software. With the rise of AI on the horizon, it brings with itself a plethora of
+possibilities for creativity and problem-solving that simply wasn't imaginable years ago. If
+utilized correctly, we have the potential to amplify our skillsets tremendously.
 
 ## Machine Learning
+
+Take a look at the code snippet below. What do you notice? Now matter how many times you run it, you're always
+going to get `81`. This is what it means for software to be _deterministic_ – given some input, no matter how many times you follow the same steps, the result will always remain the same. You as the dev give the computer
+a set of instructions that tell it exactly what it needs to do.
+
+```python title="power.py"
+def fast_pow(a, b):
+    if b == 0:
+        return 1
+    elif b < 0:
+        return 1 / fast_pow(a, -b)
+    elif b % 2 == 0:
+        h = fast_pow(a, b//2)
+        return h * h
+    else:
+        return a * fast_pow(a, b-1)
+
+pow(9,2)
+```
+
+**_But what if you don't know what to exactly what to tell it?_** For example, we might want to
+instruct a computer how to recognize cats in given pictures. You could say if it has pointy ears,
+whiskers, and meows, then it's for sure a cat. But that doesn't work well because cats come in
+different shapes and sizes, so not all of them have pointy features or iconic whiskers. What if the
+image was blurry or pictured both a cat and a dog?
+
+Most of the AI models are not this way – they are _probablistic_, meaning devs don't explicitly
+have to program instructions. So instead of coming up with such rules ourselves, we let the
+computer figure out by itself. We can use what is known as _`Machine Learning`_ to accomplish
+exactly these types of tasks. Think of it as a subset of the broader field of AI — one that allows
+you to teach software how to recognize patterns. So given the same inputs, a machine learning model might _not_ give the same answer. And that's OK since it will get more accurate over time given more example [data].
+
+### How it Works
 
 ## Neural Networks
 
